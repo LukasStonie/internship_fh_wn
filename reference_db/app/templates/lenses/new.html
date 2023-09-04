@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Neue Linse erstellen</h1>
+<form>
+  <div class="mb-3">
+    <label for="zoom" class="form-label">Zoom</label>
+    <input type="number" class="form-control" id="zoom">
+  </div>
+  <div class="mb-3">
+    <label for="numerical_aperture" class="form-label">Numerische Apertur</label>
+    <input type="number" class="form-control" id="numerical_aperture">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

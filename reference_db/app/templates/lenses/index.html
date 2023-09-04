@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Linsen</h1>
+
+{% if lenses|length<=0 %}
+    <h4>Es sind noch keine Linsen hinterlegt</h4>
+    <a type="button" class="btn btn-primary" href="{{ url_for('lenses.new') }}">Neue Linse erstellen</a>
+{% else %}
+<table>
+    <thead>
+    <tr>
+        <th scope="col">Zoom</th>
+        <th>Numerical Aperture</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for lens in lenses %}
+    <tr>
+        <td>{{ lens.zoom }}</td>
+        <td>{{ lens.numerical_aperture }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+{% endblock %}
