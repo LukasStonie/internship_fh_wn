@@ -7,34 +7,41 @@
     <i class="bi bi-arrow-left mb-auto"></i>
     Zurück
 </a>
-<h1>Spektralbereich</h1>
+<div class="row">
+    <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+        <h1>Spektralbereiche</h1>
+    </div>
+    <div class="col-12 col-md-6 d-flex align-items-center justify-content-start justify-content-md-end">
+        <a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('spectral_ranges.new') }}"><i
+                class="bi bi-plus-lg"></i>
+            Neuen Spektralbereich erstellen
+        </a>
+    </div>
+</div>
 {% if spectral_ranges|length<=0 %}
-<h4>Es sind noch keine Blenden hinterlegt</h4>
-{% endif %}
-<a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('spectral_ranges.new') }}"><i class="bi bi-plus-lg"></i>
-    Neuen Spektralbereich erstellen</a>
-
-{% if spectral_ranges|length>=1 %}
-
+<h4>Es sind noch keine Spektralbereiche hinterlegt</h4>
+{% else %}
 
 <table class="table">
     <thead>
     <tr>
         <th scope="col">Start</th>
-        <th >Ende</th>
+        <th>Ende</th>
         <th>Aktionen</th>
     </tr>
     </thead>
     <tbody>
     {% for spectral_range in spectral_ranges %}
     <tr>
-        <td>{{ spectral_range.start }} </td>
-        <td>{{ spectral_range.end }} </td>
+        <td>{{ spectral_range.start }}</td>
+        <td>{{ spectral_range.end }}</td>
         <td>
             <a type="button" class="btn btn-outline-primary btn-sm"
-               href="{{ url_for('spectral_ranges.edit', spectral_range_id=spectral_range.id) }}"><i class="bi bi-pencil-fill"></i> Bearbeiten</a>
+               href="{{ url_for('spectral_ranges.edit', spectral_range_id=spectral_range.id) }}"><i
+                    class="bi bi-pencil-fill"></i> Bearbeiten</a>
             <a type="button" class="btn btn-outline-danger btn-sm"
-               href="{{ url_for('spectral_ranges.delete', spectral_range_id=spectral_range.id) }}"><i class="bi bi-trash-fill"></i> Löschen</a>
+               href="{{ url_for('spectral_ranges.delete', spectral_range_id=spectral_range.id) }}"><i
+                    class="bi bi-trash-fill"></i> Löschen</a>
         </td>
     </tr>
     {% endfor %}

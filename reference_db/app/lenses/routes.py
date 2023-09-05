@@ -1,4 +1,5 @@
 import flask
+import sqlalchemy.exc
 from flask import render_template, request, url_for, flash, redirect
 from app.lenses import bp
 from app.models.model import Lens
@@ -26,11 +27,16 @@ def edit(lens_id):
             return redirect(url_for('lenses.edit', lens_id=lens_id, zoom=zoom, numerical_aperture=numerical_aperture))
             # if the form is valid, create a new lens and redirect to the index page
         else:
-            lens = db.session.query(Lens).filter(Lens.id == lens_id).first()
-            lens.zoom = zoom
-            lens.numerical_aperture = numerical_aperture
-            db.session.commit()
-            return redirect(url_for('lenses.index'))
+            # if unique constraint is violated, inform the user
+            try:
+                lens = db.session.query(Lens).filter(Lens.id == lens_id).first()
+                lens.zoom = zoom
+                lens.numerical_aperture = numerical_aperture
+                db.session.commit()
+                return redirect(url_for('lenses.index'))
+            except sqlalchemy.exc.IntegrityError:
+                flash('Diese Kombination aus Zoom und numerischer Apertur existiert bereits', 'error')
+                return redirect(url_for('lenses.edit',lens_id=lens_id, zoom=zoom, numerical_aperture=numerical_aperture))
     else:
         # if the request method is GET, the user wants to display the form
         # if request.args is empty, there was no attempt to submit the form
@@ -63,10 +69,19 @@ def new():
             return redirect(url_for('lenses.new', zoom=zoom, numerical_aperture=numerical_aperture))
         # if the form is valid, create a new lens and redirect to the index page
         else:
-            lens = Lens(zoom=zoom, numerical_aperture=numerical_aperture)
-            db.session.add(lens)
-            db.session.commit()
-            return redirect(url_for('lenses.index'))
+            # if unique constraint is violated, inform the user
+            try:
+                lens = Lens(zoom=zoom, numerical_aperture=numerical_aperture)
+                print("before add")
+                db.session.add(lens)
+                print("before commit")
+                db.session.commit()
+                return redirect(url_for('lenses.index'))
+
+            except sqlalchemy.exc.IntegrityError:
+                flash('Diese Kombination aus Zoom und numerischer Apertur existiert bereits', 'error')
+                return redirect(url_for('lenses.new', zoom=zoom, numerical_aperture=numerical_aperture))
+
     # if the request method is GET, the user wants to display the form
     else:
 

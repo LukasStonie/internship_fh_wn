@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, Integer, BLOB, String, ForeignKey
+from sqlalchemy import Table, Column, Integer, BLOB, String, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import declarative_base, relationship
 
 import app
@@ -13,15 +13,23 @@ class Substrate(Base):
     name = Column(String(120), nullable=False)
     instruction = Column(BLOB, nullable=True)
 
+    __table_args__ = (
+        UniqueConstraint('name', name='u_name'),
+    )
+
     def __repr__(self):
-        return f'<Substrate "{self.material}">'
+        return f'<Substrate "{self.name}">'
 
 
 class Resolution(Base):
     __tablename__ = 'resolutions'
 
     id = Column(Integer, primary_key=True)
-    resolution_description = Column(String(64), nullable=False)
+    description = Column(String(64), nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint('description', name='u_description'),
+    )
 
     def __repr__(self):
         return f'<Resolution "{self.resolution}">'
@@ -34,6 +42,11 @@ class SpectralRange(Base):
     start = Column(Integer, nullable=False)
     end = Column(Integer, nullable=False)
 
+
+    __table_args__ = (
+        UniqueConstraint('start', 'end', name='u_start_end'),
+    )
+
     def __repr__(self):
         return f'<SpectralRange "{self.start}" - "{self.end}">'
 
@@ -43,6 +56,10 @@ class Slide(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(64), nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint('name', name='u_name'),
+    )
 
     def __repr__(self):
         return f'<Slide "{self.name}">'
@@ -54,6 +71,10 @@ class Aperture(Base):
     id = Column(Integer, primary_key=True)
     size = Column(Integer, nullable=False)
 
+    __table_args__ = (
+        UniqueConstraint('size', name='u_size'),
+    )
+
     def __repr__(self):
         return f'<Aperture "{self.size}">'
 
@@ -63,6 +84,10 @@ class Laser(Base):
 
     id = Column(Integer, primary_key=True)
     wavelength = Column(Integer, nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint('wavelength', name='u_wavelength'),
+    )
 
     def __repr__(self):
         return f'<Laser "{self.wavelength}">'
@@ -74,6 +99,11 @@ class Lens(Base):
     id = Column(Integer, primary_key=True)
     zoom = Column(Integer, nullable=False)
     numerical_aperture = Column(Integer, nullable=False)
+    #UniqueConstraint('zoom', 'numerical_aperture', name='u_zoom_numerical_aperture')
+    __table_args__ = (
+        UniqueConstraint('zoom', 'numerical_aperture', name='u_zoom_numerical_aperture'),
+    )
+
 
     def __repr__(self):
         return f'<Lens "{self.zoom}" - "{self.numerical_aperture}">'
@@ -97,11 +127,15 @@ class Spectrum(Base):
         return f'<Spectrum "{self.name}">'
 
 
-class SepctrumType(Base):
+class SpectrumType(Base):
     __tablename__ = 'spectrum_types'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(200), nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint('name', name='u_name'),
+    )
 
     def __repr__(self):
         return f'<SpectrumType "{self.name}">'
@@ -112,7 +146,10 @@ class PreprocessingSteps(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(200), nullable=False)
-    description = Column(String(200), nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint('name', name='u_name'),
+    )
 
     def __repr__(self):
         return f'<PreprocessingSteps "{self.name}">'
@@ -135,6 +172,7 @@ class Compound(Base):
 
     def __repr__(self):
         return f'<Compound "{self.name}">'
+
 
 """with app.create_app().app_context():
     Base.metadata.drop_all(app.db.engine)

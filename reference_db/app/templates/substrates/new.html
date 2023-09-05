@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<a class="icon-link icon-link-hover mb-2"
+   style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+   href="{{ url_for('substrates.index') }}">
+    <i class="bi bi-arrow-left mb-auto"></i>
+    Zurück
+</a>
+<h1>Neues Substrat erstellen</h1>
+{% for mesg in get_flashed_messages() %}
+<div class="alert alert-danger my-2" role="alert">
+    {{ mesg }}
+</div>
+{% endfor %}
+<form method="POST" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="name" class="form-label">Bezeichnung</label>
+        <input type="text" class="form-control" id="name" name="name"
+               value="{{ values.get('name') if values.get('name') != None else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="instruction" class="form-label">Herstellungsanleitung</label>
+        <input class="form-control" type="file" id="instruction" name="instruction" accept=".doc,.docx,.pdf,.txt">
+    </div>
+    <button type="submit" class="btn btn-primary">Erstellen</button>
+</form>
+
+{% endblock %}

@@ -1,4 +1,5 @@
 import flask
+import sqlalchemy.exc
 from flask import render_template, request, url_for, flash, redirect
 from app.lasers import bp
 from app.models.model import Laser
@@ -38,10 +39,15 @@ def new():
             return redirect(url_for('laser.new', wavelength=wavelength))
         # if the form is valid, create a new lens and redirect to the index page
         else:
-            lens = Laser(wavelength=wavelength)
-            db.session.add(lens)
-            db.session.commit()
-            return redirect(url_for('lasers.index'))
+            # if unique constraint is violated, inform the user
+            try:
+                lens = Laser(wavelength=wavelength)
+                db.session.add(lens)
+                db.session.commit()
+                return redirect(url_for('lasers.index'))
+            except sqlalchemy.exc.IntegrityError:
+                flash('Diese Wellenlänge existiert bereits', 'error')
+                return redirect(url_for('lasers.new', wavelength=wavelength))
     # if the request method is GET, the user wants to display the form
     else:
         return render_template('lasers/new.html', values=request.args)
@@ -61,10 +67,15 @@ def edit(laser_id):
             return redirect(url_for('lasers.edit', laser_id=laser_id, wavelength=wavelength))
             # if the form is valid, create a new lens and redirect to the index page
         else:
-            laser = db.session.query(Laser).filter(Laser.id == laser_id).first()
-            laser.wavelength = wavelength
-            db.session.commit()
-            return redirect(url_for('lasers.index'))
+            # if unique constraint is violated, inform the user
+            try:
+                laser = db.session.query(Laser).filter(Laser.id == laser_id).first()
+                laser.wavelength = wavelength
+                db.session.commit()
+                return redirect(url_for('lasers.index'))
+            except sqlalchemy.exc.IntegrityError:
+                flash('Diese Wellenlänge existiert bereits', 'error')
+                return redirect(url_for('lasers.edit', laser_id=laser_id, wavelength=wavelength))
     else:
         # if the request method is GET, the user wants to display the form
         # if request.args is empty, there was no attempt to submit the form

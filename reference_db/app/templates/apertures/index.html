@@ -7,14 +7,19 @@
     <i class="bi bi-arrow-left mb-auto"></i>
     Zurück
 </a>
-<h1>Blenden</h1>
-{% if apertures|length<=0 %}
+<div class="row">
+    <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+        <h1>Blenden</h1>
+    </div>
+    <div class="col-12 col-md-6 d-flex align-items-center justify-content-start justify-content-md-end">
+        <a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('spectral_ranges.new') }}"><i
+                class="bi bi-plus-lg"></i>
+            Neuen Blende erstellen
+        </a>
+    </div>
+</div>{% if apertures|length<=0 %}
 <h4>Es sind noch keine Blenden hinterlegt</h4>
-{% endif %}
-<a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('apertures.new') }}"><i class="bi bi-plus-lg"></i>
-    Neue Blende erstellen</a>
-
-{% if apertures|length>=1 %}
+{% else %}
 
 
 <table class="table">

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<a class="icon-link icon-link-hover mb-2"
+   style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+   href="{{ url_for('resolutions.index') }}">
+    <i class="bi bi-arrow-left mb-auto"></i>
+    Zurück
+</a>
+<h1>Auflösung bearbeiten</h1>
+{% for mesg in get_flashed_messages() %}
+<div class="alert alert-danger my-2" role="alert">
+    {{ mesg }}
+</div>
+{% endfor %}
+<form method="POST">
+    <div class="mb-3">
+        <label for="description" class="form-label">Auflösung</label>
+        <input type="text" class="form-control" id="description" name="description" value="{{ resolution.description }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Speichern</button>
+</form>
+{% endblock %}

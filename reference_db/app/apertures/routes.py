@@ -1,4 +1,5 @@
 import flask
+import sqlalchemy.exc
 from flask import render_template, request, url_for, flash, redirect
 from app.apertures import bp
 from app.models.model import Aperture
@@ -38,10 +39,15 @@ def new():
             return redirect(url_for('apertures.new', size=size))
         # if the form is valid, create a new lens and redirect to the index page
         else:
-            aperture = Aperture(size=size)
-            db.session.add(aperture)
-            db.session.commit()
-            return redirect(url_for('apertures.index'))
+            # if unique constraint is violated, inform the user
+            try:
+                aperture = Aperture(size=size)
+                db.session.add(aperture)
+                db.session.commit()
+                return redirect(url_for('apertures.index'))
+            except sqlalchemy.exc.IntegrityError:
+                flash('Diese Größe existiert bereits', 'error')
+                return redirect(url_for('apertures.new', size=size))
     # if the request method is GET, the user wants to display the form
     else:
         return render_template('apertures/new.html', values=request.args)
@@ -61,10 +67,15 @@ def edit(aperture_id):
             return redirect(url_for('apertures.edit', size=size))
         # if the form is valid, create a new aperture and redirect to the index page
         else:
-            aperture = Aperture(size=size)
-            db.session.add(aperture)
-            db.session.commit()
-            return redirect(url_for('apertures.index'))
+            # if unique constraint is violated, inform the user
+            try:
+                aperture = Aperture(size=size)
+                db.session.add(aperture)
+                db.session.commit()
+                return redirect(url_for('apertures.index'))
+            except sqlalchemy.exc.IntegrityError:
+                flash('Diese Größe existiert bereits', 'error')
+                return redirect(url_for('apertures.edit', aperture_id=aperture_id, size=size))
     # if the request method is GET, the user wants to display the form
     else:
         args_len = len(request.args.keys())

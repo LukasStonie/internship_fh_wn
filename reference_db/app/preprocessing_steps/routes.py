@@ -1,8 +1,7 @@
-import flask
 import sqlalchemy.exc
-from flask import render_template, request, url_for, flash, redirect
-from app.slides import bp
-from app.models.model import Slide
+from flask import render_template, request, url_for, flash, redirect, send_file
+from app.preprocessing_steps import bp
+from app.models.model import PreprocessingSteps
 from app.extensions import db
 
 
@@ -17,10 +16,12 @@ def validate_form(form):
     # return whether form is valid
     # return the values from the form for new slide or redirect
     return form_ok, form['name']
+
+
 @bp.route('/')
 def index():
-    slides = db.session.query(Slide).all()
-    return render_template('slides/index.html', slides=slides)
+    preprocessing_steps = db.session.query(PreprocessingSteps).all()
+    return render_template('preprocessing_steps/index.html', preprocessing_steps=preprocessing_steps)
 
 
 @bp.route('/new', methods=['GET', 'POST'])
@@ -34,25 +35,25 @@ def new():
         form_ok, name = validate_form(request.form)
         # if the form is not valid, redirect to the new page and pass the values from the form
         if not form_ok:
-            return redirect(url_for('slides.new', name=name))
+            return redirect(url_for('preprocessing_steps.new', name=name))
         # if the form is valid, create a new slide and redirect to the index page
         else:
             # if unique constraint is violated, inform the user
             try:
-                slide = Slide(name=name)
-                db.session.add(slide)
+                preprocessing_step = PreprocessingSteps(name=name)
+                db.session.add(preprocessing_step)
                 db.session.commit()
-                return redirect(url_for('slides.index'))
+                return redirect(url_for('preprocessing_steps.index'))
             except sqlalchemy.exc.IntegrityError:
                 flash('Diese Bezeichnung existiert bereits', 'error')
-                return redirect(url_for('slides.new', name=name))
+                return redirect(url_for('preprocessing_steps.new', name=name))
     # if the request method is GET, the user wants to display the form
     else:
-        return render_template('slides/new.html', values=request.args)
+        return render_template('preprocessing_steps/new.html', values=request.args)
 
 
-@bp.route('/<slide_id>/edit', methods=['GET', 'POST'])
-def edit(slide_id):
+@bp.route('/<preprocessing_step_id>/edit', methods=['GET', 'POST'])
+def edit(preprocessing_step_id):
     # if the request method is POST, the form was submitted
     # validate the form and create a new slide
     if request.method == 'POST':
@@ -62,32 +63,32 @@ def edit(slide_id):
         form_ok, name = validate_form(request.form)
         # if the form is not valid, redirect to the new page and pass the values from the form
         if not form_ok:
-            return redirect(url_for('slides.edit', slide_id=slide_id, name=name))
+            return redirect(url_for('preprocessing_steps.edit', name=name))
         # if the form is valid, create a new slide and redirect to the index page
         else:
             # if unique constraint is violated, inform the user
             try:
-                slide = db.session.query(Slide).filter(Slide.id == slide_id).first()
-                slide.name = name
+                preprocessing_step = db.session.query(PreprocessingSteps).filter_by(id=preprocessing_step_id).first()
+                preprocessing_step.name = name
                 db.session.commit()
-                return redirect(url_for('slides.index'))
+                return redirect(url_for('preprocessing_steps.index'))
             except sqlalchemy.exc.IntegrityError:
                 flash('Diese Bezeichnung existiert bereits', 'error')
-                return redirect(url_for('slides.edit', slide_id=slide_id, name=name))
+                return redirect(url_for('preprocessing_steps.edit', name=name))
     else:
         # if the request method is GET, the user wants to display the form
         # if request.args is empty, there was no attempt to submit the form
         # if request.args is not empty, the form was submitted but validation failed and the values from the form are passed
         args_len = len(request.args.keys())
-        slide = vars(db.session.query(Slide).filter(Slide.id == slide_id).first()) \
+        preprocessing_step = vars(db.session.query(PreprocessingSteps).filter(PreprocessingSteps.id == preprocessing_step_id).first()) \
             if args_len == 0 \
             else request.args
-        return render_template('slides/edit.html', slide=slide)
+        return render_template('preprocessing_steps/edit.html', preprocessing_step=preprocessing_step)
 
 
-@bp.route('/<slide_id>/delete')
-def delete(slide_id):
-    slide = db.session.query(Slide).filter(Slide.id == slide_id).first()
-    db.session.delete(slide)
+@bp.route('/<preprocessing_step_id>/delete', methods=['GET', 'POST'])
+def delete(preprocessing_step_id):
+    preprocessing_step = db.session.query(PreprocessingSteps).filter(PreprocessingSteps.id == preprocessing_step_id).first()
+    db.session.delete(preprocessing_step)
     db.session.commit()
-    return redirect(url_for('slides.index'))
+    return redirect(url_for('preprocessing_steps.index'))

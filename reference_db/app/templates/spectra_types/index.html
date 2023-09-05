@@ -9,39 +9,36 @@
 </a>
 <div class="row">
     <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-        <h1>Objektive</h1>
+        <h1>Spektrenarten</h1>
     </div>
     <div class="col-12 col-md-6 d-flex align-items-center justify-content-start justify-content-md-end">
-        <a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('spectral_ranges.new') }}"><i
+        <a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('spectra_types.new') }}"><i
                 class="bi bi-plus-lg"></i>
-            Neues Objektiv erstellen
+            Neue Spektrenart erstellen
         </a>
     </div>
-</div><div>
 </div>
-{% if lenses|length<=0 %}
-<h4>Es sind noch keine Objektive hinterlegt</h4>
+{% if spectra_types|length<=0 %}
+<h4>Es sind noch keine Spektrenarten hinterlegt</h4>
 {% else %}
 
 <table class="table">
     <thead>
     <tr>
-        <th scope="col">Zoom</th>
-        <th>Numerische Apertur</th>
+        <th scope="col">Bezeichnung</th>
         <th>Aktionen</th>
     </tr>
     </thead>
     <tbody>
-    {% for lens in lenses %}
+    {% for spectra_type in spectra_types %}
     <tr>
-        <td>{{ lens.zoom }}x</td>
-        <td>{{ lens.numerical_aperture }}</td>
+        <td>{{ spectra_type.name }}</td>
         <td>
             <a type="button" class="btn btn-outline-primary btn-sm"
-               href="{{ url_for('lenses.edit', lens_id=lens.id) }}"><i
+               href="{{ url_for('spectra_types.edit', spectrum_type_id=spectra_type.id) }}"><i
                     class="bi bi-pencil-fill"></i> Bearbeiten</a>
             <a type="button" class="btn btn-outline-danger btn-sm"
-               href="{{ url_for('lenses.delete', lens_id=lens.id) }}"><i
+               href="{{ url_for('spectra_types.delete', spectrum_type_id=spectra_type.id) }}"><i
                     class="bi bi-trash-fill"></i> Löschen</a>
         </td>
     </tr>

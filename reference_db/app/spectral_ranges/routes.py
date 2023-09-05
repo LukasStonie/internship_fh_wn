@@ -1,3 +1,4 @@
+import sqlalchemy.exc
 from flask import render_template, request, url_for, flash, redirect
 from app.spectral_ranges import bp
 from app.models.model import SpectralRange
@@ -40,10 +41,15 @@ def new():
             return redirect(url_for('spectral_ranges.new', start=start, end=end))
         # if the form is valid, create a new slide and redirect to the index page
         else:
-            spectral_range = SpectralRange(start=start, end=end)
-            db.session.add(spectral_range)
-            db.session.commit()
-            return redirect(url_for('spectral_ranges.index'))
+            # if unique constraint is violated, inform the user
+            try:
+                spectral_range = SpectralRange(start=start, end=end)
+                db.session.add(spectral_range)
+                db.session.commit()
+                return redirect(url_for('spectral_ranges.index'))
+            except sqlalchemy.exc.IntegrityError:
+                flash('Diese Kombination aus Start und Ende existiert bereits', 'error')
+                return redirect(url_for('spectral_ranges.new', start=start, end=end))
     # if the request method is GET, the user wants to display the form
     else:
         return render_template('spectral_ranges/new.html', values=request.args)
@@ -63,11 +69,16 @@ def edit(spectral_range_id):
             return redirect(url_for('spectral_ranges.edit', spectral_range_id=spectral_range_id, start=start, end=end))
         # if the form is valid, create a new slide and redirect to the index page
         else:
-            spectral_range = db.session.query(SpectralRange).filter(SpectralRange.id == spectral_range_id).first()
-            spectral_range.start = start
-            spectral_range.end = end
-            db.session.commit()
-            return redirect(url_for('spectral_ranges.index'))
+            # if unique constraint is violated, inform the user
+            try:
+                spectral_range = db.session.query(SpectralRange).filter(SpectralRange.id == spectral_range_id).first()
+                spectral_range.start = start
+                spectral_range.end = end
+                db.session.commit()
+                return redirect(url_for('spectral_ranges.index'))
+            except sqlalchemy.exc.IntegrityError:
+                flash('Diese Kombination aus Start und Ende existiert bereits', 'error')
+                return redirect(url_for('spectral_ranges.edit', spectral_range_id=spectral_range_id, start=start, end=end))
     else:
         # if the request method is GET, the user wants to display the form
         # if request.args is empty, there was no attempt to submit the form
