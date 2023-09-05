@@ -3,6 +3,10 @@
 {% block content %}
 <h1>ReferenzDB</h1>
 <div class="content">
-    <a type="button" class="btn btn-primary" href="{{ url_for('lenses.index') }}">Lenses</a>
+    <a type="button" class="btn btn-primary" href="{{ url_for('lenses.index') }}">Objektive</a>
+    <a type="button" class="btn btn-primary" href="{{ url_for('lasers.index') }}">Laser</a>
+    <a type="button" class="btn btn-primary" href="{{ url_for('apertures.index') }}">Blenden</a>
+    <a type="button" class="btn btn-primary" href="{{ url_for('slides.index') }}">Objektträger</a>
+    <a type="button" class="btn btn-primary" href="{{ url_for('spectral_ranges.index') }}">Spektralbereiche</a>
 </div>
 {% endblock %}

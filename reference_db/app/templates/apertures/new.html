@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<a class="icon-link icon-link-hover mb-2"
+   style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+   href="{{ url_for('apertures.index') }}">
+    <i class="bi bi-arrow-left mb-auto"></i>
+    Zurück
+</a>
+
+<h1>Neue Blende erstellen</h1>
+{% for mesg in get_flashed_messages() %}
+<div class="alert alert-danger my-2" role="alert">
+    {{ mesg }}
+</div>
+{% endfor %}
+<form method="POST">
+    <div class="mb-3">
+        <label for="size" class="form-label">Größe</label>
+        <input type="number" class="form-control" id="size" name="size" value="{{ values.get('size') }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Erstellen</button>
+</form>
+
+{% endblock %}

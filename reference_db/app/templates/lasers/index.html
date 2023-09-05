@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<a class="icon-link icon-link-hover mb-2"
+   style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+   href="{{ url_for('main.index') }}">
+    <i class="bi bi-arrow-left mb-auto"></i>
+    Zurück
+</a>
+<h1>Laser</h1>
+{% if lasers|length<=0 %}
+<h4>Es sind noch keine Laser hinterlegt</h4>
+{% endif %}
+<a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('lasers.new') }}"><i class="bi bi-plus-lg"></i>
+    Neuen Laser erstellen</a>
+
+{% if lasers|length>=1 %}
+
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Wellenlänge</th>
+        <th>Aktionen</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for laser in lasers %}
+    <tr>
+        <td>{{ laser.wavelength }} nm</td>
+        <td>
+            <a type="button" class="btn btn-outline-primary btn-sm"
+               href="{{ url_for('lasers.edit', laser_id=laser.id) }}"><i class="bi bi-pencil-fill"></i> Bearbeiten</a>
+            <a type="button" class="btn btn-outline-danger btn-sm"
+               href="{{ url_for('lasers.delete', laser_id=laser.id) }}"><i class="bi bi-trash-fill"></i> Löschen</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+{% endblock %}

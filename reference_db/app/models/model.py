@@ -136,6 +136,6 @@ class Compound(Base):
     def __repr__(self):
         return f'<Compound "{self.name}">'
 
-with app.create_app().app_context():
+"""with app.create_app().app_context():
     Base.metadata.drop_all(app.db.engine)
-    Base.metadata.create_all(app.db.engine)
+    Base.metadata.create_all(app.db.engine)"""

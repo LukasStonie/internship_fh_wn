@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<a class="icon-link icon-link-hover mb-2"
+   style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+   href="{{ url_for('main.index') }}">
+    <i class="bi bi-arrow-left mb-auto"></i>
+    Zurück
+</a>
+<h1>Blenden</h1>
+{% if apertures|length<=0 %}
+<h4>Es sind noch keine Blenden hinterlegt</h4>
+{% endif %}
+<a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('apertures.new') }}"><i class="bi bi-plus-lg"></i>
+    Neue Blende erstellen</a>
+
+{% if apertures|length>=1 %}
+
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Größe</th>
+        <th>Aktionen</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for aperture in apertures %}
+    <tr>
+        <td>{{ aperture.size }} </td>
+        <td>
+            <a type="button" class="btn btn-outline-primary btn-sm"
+               href="{{ url_for('apertures.edit', aperture_id=aperture.id) }}"><i class="bi bi-pencil-fill"></i> Bearbeiten</a>
+            <a type="button" class="btn btn-outline-danger btn-sm"
+               href="{{ url_for('apertures.delete', aperture_id=aperture.id) }}"><i class="bi bi-trash-fill"></i> Löschen</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+{% endblock %}

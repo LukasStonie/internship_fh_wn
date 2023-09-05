@@ -1,25 +1,43 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-<h1>Linsen</h1>
-
+<a class="icon-link icon-link-hover mb-2"
+   style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+   href="{{ url_for('main.index') }}">
+    <i class="bi bi-arrow-left mb-auto"></i>
+    Zurück
+</a>
+<h1>Objektive</h1>
+<div>
+</div>
 {% if lenses|length<=0 %}
-    <h4>Es sind noch keine Linsen hinterlegt</h4>
-    <a type="button" class="btn btn-primary" href="{{ url_for('lenses.new') }}">Neue Linse erstellen</a>
-{% else %}
-<table>
+<h4>Es sind noch keine Objektive hinterlegt</h4>
+{% endif %}
+<a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('lenses.new') }}"><i class="bi bi-plus-lg"></i>
+    Neues Objektiv erstellen</a>
+
+{% if lenses|length>=1 %}
+<table class="table">
     <thead>
     <tr>
         <th scope="col">Zoom</th>
-        <th>Numerical Aperture</th>
+        <th>Numerische Apertur</th>
+        <th>Aktionen</th>
     </tr>
     </thead>
     <tbody>
     {% for lens in lenses %}
     <tr>
-        <td>{{ lens.zoom }}</td>
+        <td>{{ lens.zoom }}x</td>
         <td>{{ lens.numerical_aperture }}</td>
+        <td>
+            <a type="button" class="btn btn-outline-primary btn-sm"
+               href="{{ url_for('lenses.edit', lens_id=lens.id) }}"><i
+                    class="bi bi-pencil-fill"></i> Bearbeiten</a>
+            <a type="button" class="btn btn-outline-danger btn-sm"
+               href="{{ url_for('lenses.delete', lens_id=lens.id) }}"><i
+                    class="bi bi-trash-fill"></i> Löschen</a>
+        </td>
     </tr>
     {% endfor %}
 </table>
