@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<a class="icon-link icon-link-hover mb-2"
+   style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+   href="{{ url_for('compounds.index') }}">
+    <i class="bi bi-arrow-left mb-auto"></i>
+    Zurück
+</a>
+<h1>Neue Referenzsubstanz erstellen</h1>
+{% for mesg in get_flashed_messages() %}
+<div class="alert alert-danger my-2" role="alert">
+    {{ mesg }}
+</div>
+{% endfor %}
+<form method="POST" class="row g-3">
+    <div class="col-12">
+        <label for="name" class="form-label">Bezeichnung</label>
+        <input type="text" class="form-control" id="name" name="name" placeholder="Adenin"
+               value="{{values.get('name')if values.get('name')else ''}}">
+    </div>
+    <div class="col-md-4">
+        <label for="coaddition" class="form-label">Koaddition</label>
+        <input type="number" class="form-control" id="coaddition" name="coaddition" placeholder="10"
+               value="{{values.get('coaddition')}}">
+    </div>
+    <div class="col-md-4">
+        <label for="integration_time" class="form-label">Integrationszeit in ms</label>
+        <input type="number" class="form-control" id="integration_time" name="integration_time" placeholder="3000"
+               value="{{values.get('integration_time')}}">
+    </div>
+    <div class="col-md-4">
+        <label for="laser_power" class="form-label">Laserleistung in mW</label>
+        <input type="number" class="form-control" id="laser_power" name="laser_power" placeholder="25"
+               value="{{values.get('laser_power')}}">
+    </div>
+    <div class="col-md-6">
+        <label for="lens_id" class="form-label">Objektiv</label>
+        <select class="form-select" id="lens_id" name="lens_id">
+            {% for lens in lookup.lenses %}
+            <option value="{{ lens.id }}">{{ lens.zoom
+                }}x, {{lens.numerical_aperture}}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-6">
+        <label for="laser_id" class="form-label">Laser</label>
+        <select class="form-select" id="laser_id" name="laser_id">
+            {% for laser in lookup.lasers %}
+            <option value="{{ laser.id }}">{{ laser.wavelength }} nm</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-6">
+        <label for="spectral_range_id" class="form-label">Spektralbereich</label>
+        <select class="form-select" id="spectral_range_id" name="spectral_range_id">
+            {% for spectral_range in lookup.spectral_ranges %}
+            <option value="{{ spectral_range.id }}">{{ spectral_range.start }}nm - {{spectral_range.end}}nm</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-6">
+        <label for="resolution_id" class="form-label">Auflösung</label>
+        <select class="form-select" id="resolution_id" name="resolution_id">
+            {% for resolution in lookup.resolutions %}
+            <option value="{{ resolution.id }}">{{ resolution.description }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-6">
+        <label for="aperture_id" class="form-label">Blende</label>
+        <select class="form-select" id="aperture_id" name="aperture_id">
+            {% for aperture in lookup.apertures %}
+            <option value="{{ aperture.id }}">{{ aperture.size }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-6">
+        <label for="slide_id" class="form-label">Objektträger</label>
+        <select class="form-select" id="slide_id" name="slide_id">
+            {% for slide in lookup.slides %}
+            <option value="{{ slide.id }}">{{ slide.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-6">
+        <label for="substrate_id" class="form-label">Substrat (optional)</label>
+        <select class="form-select" id="substrate_id" name="substrate_id">
+            <option value=None>keines</option>
+            {% for substrate in lookup.substrates %}
+            <option value="{{ substrate.id }}">{{ substrate.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-12">
+        <label for="description" class="form-label">Beschreibung (optional)</label>
+        <textarea class="form-control" id="description" name="description"
+                  placeholder="Konzentration, Volumen, ...">{% if values.get('description') != None %}{{ values.get('description') }}{% endif %}</textarea>
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Erstellen</button>
+    </div>
+</form>
+
+{% endblock %}

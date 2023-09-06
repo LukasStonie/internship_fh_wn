@@ -33,7 +33,7 @@ class Resolution(Base):
     )
 
     def __repr__(self):
-        return f'<Resolution "{self.resolution}">'
+        return f'<Resolution "{self.description}">'
 
 
 class SpectralRange(Base):
@@ -42,7 +42,6 @@ class SpectralRange(Base):
     id = Column(Integer, primary_key=True)
     start = Column(Integer, nullable=False)
     end = Column(Integer, nullable=False)
-
 
     __table_args__ = (
         UniqueConstraint('start', 'end', name='u_start_end'),
@@ -70,7 +69,7 @@ class Aperture(Base):
     __tablename__ = 'apertures'
 
     id = Column(Integer, primary_key=True)
-    size = Column(Integer, nullable=False)
+    size = Column(Integer, nullable=False) #TODO make this a string
 
     __table_args__ = (
         UniqueConstraint('size', name='u_size'),
@@ -100,11 +99,10 @@ class Lens(Base):
     id = Column(Integer, primary_key=True)
     zoom = Column(Integer, nullable=False)
     numerical_aperture = Column(Integer, nullable=False)
-    #UniqueConstraint('zoom', 'numerical_aperture', name='u_zoom_numerical_aperture')
+    # UniqueConstraint('zoom', 'numerical_aperture', name='u_zoom_numerical_aperture')
     __table_args__ = (
         UniqueConstraint('zoom', 'numerical_aperture', name='u_zoom_numerical_aperture'),
     )
-
 
     def __repr__(self):
         return f'<Lens "{self.zoom}" - "{self.numerical_aperture}">'
@@ -123,6 +121,10 @@ class Spectrum(Base):
     compound_id = Column(Integer, ForeignKey('compounds.id'))
     spectrum_type_id = Column(Integer, ForeignKey('spectrum_types.id'))
     preprocessing_steps = relationship("PreprocessingSteps", secondary=spectrum_has_preprocessing_steps)
+
+    __table_args__ = (
+        UniqueConstraint('file_path', name='u_file_path'),
+    )
 
     def __repr__(self):
         return f'<Spectrum "{self.name}">'
@@ -163,13 +165,17 @@ class Compound(Base):
     name = Column(String(200), nullable=False)
     coaddition = Column(Integer, nullable=False)
     integration_time = Column(Integer, nullable=False)
-    lens_id = Column(Integer, ForeignKey('lenses.id'))
-    laser_id = Column(Integer, ForeignKey('lasers.id'))
-    aperture_id = Column(Integer, ForeignKey('apertures.id'))
-    slide_id = Column(Integer, ForeignKey('slides.id'))
-    spectral_range_id = Column(Integer, ForeignKey('spectral_ranges.id'))
-    resolution_id = Column(Integer, ForeignKey('resolutions.id'))
-    substrate_id = Column(Integer, ForeignKey('substrates.id'))
+    lens_id = Column(Integer, ForeignKey('lenses.id'), nullable=False)
+    laser_id = Column(Integer, ForeignKey('lasers.id'), nullable=False)
+    laser_power = Column(Integer, nullable=False)
+    spectral_range_id = Column(Integer, ForeignKey('spectral_ranges.id'), nullable=False)
+    resolution_id = Column(Integer, ForeignKey('resolutions.id'), nullable=False)
+    aperture_id = Column(Integer, ForeignKey('apertures.id'), nullable=False)
+    slide_id = Column(Integer, ForeignKey('slides.id'), nullable=False)
+    substrate_id = Column(Integer, ForeignKey('substrates.id'), nullable=True)
+    user = Column(String(200), nullable=False)
+    description = Column(String(400), nullable=True)
+    date = Column(String(15), nullable=False)
 
     def __repr__(self):
         return f'<Compound "{self.name}">'

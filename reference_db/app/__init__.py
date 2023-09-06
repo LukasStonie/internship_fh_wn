@@ -42,6 +42,9 @@ def create_app(config_class=Config):
     from app.spectra_types import bp as spectrum_types_bp
     app.register_blueprint(spectrum_types_bp, url_prefix='/spectra_types')
 
+    from app.compounds import bp as compounds_bp
+    app.register_blueprint(compounds_bp, url_prefix='/compounds')
+
     @app.route('/test/')
     def test_page():
         return '<h1>Testing the Flask Application Factory Pattern</h1>'

@@ -43,8 +43,9 @@ def new():
             try:
                 has_file = request.files['instruction'] is not None
 
-                substrate = Substrate(name=name)if not has_file \
-                            else Substrate(name=name, filename=request.files['instruction'].filename, instruction=request.files['instruction'].read())
+                substrate = Substrate(name=name) if not has_file \
+                    else Substrate(name=name, filename=request.files['instruction'].filename,
+                                   instruction=request.files['instruction'].read())
                 db.session.add(substrate)
                 db.session.commit()
                 return redirect(url_for('substrates.index'))
@@ -102,6 +103,7 @@ def download(substrate_id):
     print(substrate_id)
     substrate = db.session.query(Substrate).filter(Substrate.id == substrate_id).first()
     return send_file(BytesIO(substrate.instruction), download_name=f'{substrate.filename}', as_attachment=True)
+
 
 @bp.route('/<substrate_id>/removefile', methods=['GET', 'POST'])
 def remove_file(substrate_id):
