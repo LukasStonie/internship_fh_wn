@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Spektren hinzufügen</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Vorverarbeitete Daten</h3>
+
+            <div class="mb-3">
+                <label class="form-label">Vorverarbeitungsschritte (Auswahl)</label>
+                <div>
+                    {% for step in lookup.preprocessing_steps %}
+                    <input type="checkbox" class="btn-check my-1" id="btn-{{step.id}}" name="check-{{step.id}}"
+                           autocomplete="off">
+                    <label class="btn btn-sm btn-outline-success my-1" for="btn-{{step.id}}">{{step.name}}</label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="spectrum_processed" class="form-label">Spektrum</label>
+                <input class="form-control" type="file" id="spectrum_processed" name="spectrum_processed">
+            </div>
+
+
+        </div>
+        <div class="col-md-6">
+            <h3>Rohdaten</h3>
+            <div class="mb-3">
+                <label for="spectrum_raw" class="form-label">Spektrum</label>
+                <input class="form-control" type="file" id="spectrum_raw" name="spectrum_raw">
+            </div>
+        </div>
+
+    </div>
+    <button type="submit" class="btn btn-primary my-2">Spektren hinzufügen</button>
+
+</form>
+
+{% endblock %}

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, flash, redirect
+from flask import Flask
 from config import Config
 from app.extensions import db
 
@@ -12,38 +12,41 @@ def create_app(config_class=Config):
     db.init_app(app)
 
     # Register blueprints here
-    from app.main import bp as main_bp
+    from app.routes.main import bp as main_bp
     app.register_blueprint(main_bp)
 
-    from app.lenses import bp as lenses_bp
+    from app.routes.lenses import bp as lenses_bp
     app.register_blueprint(lenses_bp, url_prefix='/lenses')
 
-    from app.lasers import bp as lasers_bp
+    from app.routes.lasers import bp as lasers_bp
     app.register_blueprint(lasers_bp, url_prefix='/lasers')
 
-    from app.apertures import bp as apertures_bp
+    from app.routes.apertures import bp as apertures_bp
     app.register_blueprint(apertures_bp, url_prefix='/apertures')
 
-    from app.slides import bp as slides_bp
+    from app.routes.slides import bp as slides_bp
     app.register_blueprint(slides_bp, url_prefix='/slides')
 
-    from app.spectral_ranges import bp as spectral_ranges_bp
+    from app.routes.spectral_ranges import bp as spectral_ranges_bp
     app.register_blueprint(spectral_ranges_bp, url_prefix='/spectral_ranges')
 
-    from app.resolutions import bp as resolutions_bp
+    from app.routes.resolutions import bp as resolutions_bp
     app.register_blueprint(resolutions_bp, url_prefix='/resolutions')
 
-    from app.substrates import bp as substrates_bp
+    from app.routes.substrates import bp as substrates_bp
     app.register_blueprint(substrates_bp, url_prefix='/substrates')
 
-    from app.preprocessing_steps import bp as preprocessing_steps_bp
+    from app.routes.preprocessing_steps import bp as preprocessing_steps_bp
     app.register_blueprint(preprocessing_steps_bp, url_prefix='/preprocessing_steps')
 
-    from app.spectra_types import bp as spectrum_types_bp
+    from app.routes.spectra_types import bp as spectrum_types_bp
     app.register_blueprint(spectrum_types_bp, url_prefix='/spectra_types')
 
-    from app.compounds import bp as compounds_bp
+    from app.routes.compounds import bp as compounds_bp
     app.register_blueprint(compounds_bp, url_prefix='/compounds')
+
+    from app.routes.spectra import bp as spectra_bp
+    app.register_blueprint(spectra_bp, url_prefix='/spectra')
 
     @app.route('/test/')
     def test_page():

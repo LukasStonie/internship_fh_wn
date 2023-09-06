@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<a class="icon-link icon-link-hover mb-2"
+   style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+   href="{{ url_for('compounds.index') }}">
+    <i class="bi bi-arrow-left mb-auto"></i>
+    Zurück
+</a>
+<h1>Details <b><em>{{compound.name}}</em></b></h1>
+<p><span class="badge text-bg-dark">erstellt am {{compound.date}} von {{compound.user}}</span></p>
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table table-fixed">
+            <tbody>
+            <tr>
+                <th>Koaddition</th>
+                <td>{{compound.coaddition}}</td>
+            </tr>
+            <tr>
+                <th>Integrationszeit</th>
+                <td>{{compound.integration_time}} ms</td>
+            </tr>
+            <tr>
+                <th>Laserleistung</th>
+                <td>{{compound.laser_power}} mW</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <table class="table table-fixed">
+            <tbody>
+            <tr>
+                <th>Objektiv</th>
+                <td>{{lookup.lens.zoom}}x, {{lookup.lens.numerical_aperture}}</td>
+            </tr>
+            <tr>
+                <th>Laser</th>
+                <td>{{lookup.laser.wavelength}} nm</td>
+            </tr>
+            <tr>
+                <th>Blende</th>
+                <td>{{lookup.aperture.size}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-md-6">
+        <table class="table table-fixed">
+            <tbody>
+            <tr>
+                <th>Spektralbereich</th>
+                <td>{{lookup.spectral_range.start}} nm - {{lookup.spectral_range.end}} nm</td>
+            </tr>
+            <tr>
+                <th>Auflösung</th>
+                <td>{{lookup.resolution.description}}</td>
+            </tr>
+            <tr>
+                <th>Objektträger</th>
+                <td>{{lookup.slide.name}}</td>
+            </tr>
+            <tr>
+                <th>Substrat</th>
+                <td>{{lookup.substrate.name if lookup.substrate != None else 'Keines'}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <label for="description" class="form-label"><b>Beschreibung</b></label>
+        <textarea readonly class="form-control" id="description" name="description" rows="3"
+                  placeholder="Beschreibung">{{compound.description}}</textarea>
+    </div>
+</div>
+<hr>
+
+{% if compound.images|length<=0 %}
+<div class="d-flex justify-content-center align-items-center flex-column">
+    <h4 class="">Es sind noch keine Spektren für diese Substanz hinterlegt</h4>
+    <a type="button" class="btn btn-outline-success btn" href="{{ url_for('spectra.new', compound_id=compound.id) }}"><i
+            class="bi bi-plus-lg"></i>
+        Spektren hinzufügen
+    </a>
+</div>
+{% else %}
+
+{% endif %}
+{% endblock %}
