@@ -18,11 +18,19 @@
         <label for="name" class="form-label">Bezeichnung</label>
         <input type="text" class="form-control" id="name" name="name" value="{{ substrate.name }}">
     </div>
+    {% if substrate.filename %}
+    <div class="input-group mb-3">
+        <a class="btn btn-outline-success" type="button" id="button-download" href="{{url_for('substrates.download', substrate_id=substrate.id)}}"><i class="bi bi-download"></i> Herunterladen</a>
+        <a class="btn btn-outline-danger" type="button" id="button-delete" href="{{url_for('substrates.remove_file', substrate_id=substrate.id)}}"><i class="bi bi-trash-fill"></i> Löschen</a>
+        <input type="text" class="form-control" aria-label="Example text with button addon"
+               aria-describedby="button-addon1" value="{{substrate.filename}}" disabled>
+    </div>
+    {% else %}
     <div class="mb-3">
         <label for="instruction" class="form-label">Herstellungsanleitung</label>
-        <input class="form-control" type="file" id="instruction" name="instruction_new" accept=".doc,.docx,.pdf,.txt">
+        <input class="form-control" type="file" id="instruction" name="instruction" accept=".doc,.docx,.pdf,.txt">
     </div>
-
+    {% endif %}
     <button type="submit" class="btn btn-primary">Speichern</button>
 </form>
 {% endblock %}

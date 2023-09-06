@@ -44,7 +44,7 @@ def new():
                 has_file = request.files['instruction'] is not None
 
                 substrate = Substrate(name=name)if not has_file \
-                            else Substrate(name=name, instruction=request.files['instruction'].read())
+                            else Substrate(name=name, filename=request.files['instruction'].filename, instruction=request.files['instruction'].read())
                 db.session.add(substrate)
                 db.session.commit()
                 return redirect(url_for('substrates.index'))
@@ -72,12 +72,12 @@ def edit(substrate_id):
         else:
             # if unique constraint is violated, inform the user
             try:
-                has_file = request.files['instruction_new'] is not None
-                is_empty = request.files['instruction_new'].content_length == 0
+
+                has_file = len(request.files) != 0 and request.files['instruction'].filename is not None
                 substrate = db.session.query(Substrate).filter(Substrate.id == substrate_id).first()
                 substrate.name = name
-                if has_file and not is_empty:
-                    substrate.instruction = request.files['instruction_new'].read()
+                if has_file:
+                    substrate.instruction = request.files['instruction'].read()
                 db.session.commit()
                 return redirect(url_for('substrates.index'))
             except sqlalchemy.exc.IntegrityError:
@@ -101,4 +101,12 @@ def delete(substrate_id):
 def download(substrate_id):
     print(substrate_id)
     substrate = db.session.query(Substrate).filter(Substrate.id == substrate_id).first()
-    return send_file(BytesIO(substrate.instruction), download_name=f'{substrate.name}_instruction.pdf', as_attachment=True)
+    return send_file(BytesIO(substrate.instruction), download_name=f'{substrate.filename}', as_attachment=True)
+
+@bp.route('/<substrate_id>/removefile', methods=['GET', 'POST'])
+def remove_file(substrate_id):
+    substrate = db.session.query(Substrate).filter(Substrate.id == substrate_id).first()
+    substrate.instruction = None
+    substrate.filename = None
+    db.session.commit()
+    return redirect(url_for('substrates.edit', substrate_id=substrate_id))

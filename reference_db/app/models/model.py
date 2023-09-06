@@ -11,6 +11,7 @@ class Substrate(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(120), nullable=False)
+    filename = Column(String(120), nullable=True)
     instruction = Column(BLOB, nullable=True)
 
     __table_args__ = (
