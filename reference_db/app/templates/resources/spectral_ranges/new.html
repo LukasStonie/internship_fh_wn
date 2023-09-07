@@ -16,11 +16,11 @@
 {% endfor %}
 <form method="POST">
     <div class="mb-3">
-        <label for="start" class="form-label">Start in nm</label>
+        <label for="start" class="form-label">Start [cm<sup>-1</sup>]</label>
         <input type="number" class="form-control" id="start" name="start" value="{{ values.get('start') }}">
     </div>
     <div class="mb-3">
-        <label for="end" class="form-label">Ende in nm</label>
+        <label for="end" class="form-label">Ende [cm<sup>-1</sup>]</label>
         <input type="number" class="form-control" id="end" name="end" value="{{ values.get('end') }}">
     </div>
     <button type="submit" class="btn btn-primary">Erstellen</button>

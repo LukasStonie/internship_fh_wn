@@ -1,9 +1,11 @@
 import sqlalchemy.exc
 from flask import render_template, request, url_for, flash, redirect
 from app.routes.compounds import bp
-from app.models.model import Compound, Lens, Laser, SpectralRange, Resolution, Aperture, Slide, Substrate, Spectrum
+from app.models.model import Compound, Lens, Laser, SpectralRange, Resolution, Aperture, Slide, Substrate, Spectrum, \
+    SpectrumType, PreprocessingSteps
 from app.extensions import db
 from datetime import date
+import base64
 
 
 def validate_form(form):
@@ -139,7 +141,7 @@ def edit(compound_id):
         # if the form is not valid, redirect to the new page and pass the values from the form
         if not form_ok:
             return redirect(
-                url_for('compounds.new', name=name, coaddition=coaddition,
+                url_for('compounds.edit', compound_id=compound_id, name=name, coaddition=coaddition,
                         integration_time=integration_time, lens_id=lens_id,
                         laser_id=laser_id, laser_power=laser_power,
                         spectral_range_id=spectral_range_id,
@@ -219,7 +221,18 @@ def show(compound_id):
         'resolution': db.session.query(Resolution).filter(Resolution.id  == compound.resolution_id).first(),
         'aperture': db.session.query(Aperture).filter(Aperture.id  == compound.aperture_id).first(),
         'slide': db.session.query(Slide).filter(Slide.id  == compound.slide_id).first(),
-        'substrate': db.session.query(Substrate).filter(Substrate.id  == compound.substrate_id).first()
+        'substrate': db.session.query(Substrate).filter(Substrate.id  == compound.substrate_id).first(),
+        'spectra_type': db.session.query(SpectrumType).all(),
+        'preprocessing_steps': db.session.query(PreprocessingSteps).all()
     }
     spectra = db.session.query(Spectrum).filter(Spectrum.compound_id == compound_id).all()
-    return render_template('resources/compounds/show.html', compound=compound, lookup=lookup, spectra=spectra)
+    for i in spectra:
+        print(i.preprocessing_steps)
+    plots= {}
+    for i in spectra:
+        image_path = i.file_path.replace('csv', 'png')
+        with open(image_path, 'rb') as f:
+            plots[i.id] = base64.b64encode(f.read()).lstrip(b'\n').decode('utf-8')
+
+    print(plots)
+    return render_template('resources/compounds/show.html', compound=compound, lookup=lookup, spectra=spectra, plots=plots)

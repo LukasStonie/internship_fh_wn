@@ -42,7 +42,6 @@ def new():
             # if unique constraint is violated, inform the user
             try:
                 has_file = request.files['instruction'] is not None
-
                 substrate = Substrate(name=name) if not has_file \
                     else Substrate(name=name, filename=request.files['instruction'].filename,
                                    instruction=request.files['instruction'].read())
@@ -68,7 +67,7 @@ def edit(substrate_id):
         form_ok, name = validate_form(request.form)
         # if the form is not valid, redirect to the new page and pass the values from the form
         if not form_ok:
-            return redirect(url_for('substrates.edit', name=name))
+            return redirect(url_for('substrates.edit', substrate_id=substrate_id, name=name))
         # if the form is valid, create a new slide and redirect to the index page
         else:
             # if unique constraint is violated, inform the user
@@ -78,6 +77,7 @@ def edit(substrate_id):
                 substrate = db.session.query(Substrate).filter(Substrate.id == substrate_id).first()
                 substrate.name = name
                 if has_file:
+                    substrate.filename = request.files['instruction'].filename
                     substrate.instruction = request.files['instruction'].read()
                 db.session.commit()
                 return redirect(url_for('substrates.index'))
@@ -86,7 +86,11 @@ def edit(substrate_id):
                 return redirect(url_for('substrates.edit', name=name))
     # if the request method is GET, the user wants to display the form
     else:
-        substrate = db.session.query(Substrate).filter(Substrate.id == substrate_id).first()
+        args_len = len(request.args.keys())
+        substrate = vars(
+            db.session.query(Substrate).filter(Substrate.id == substrate_id).first()) \
+            if args_len == 0 \
+            else request.args
         return render_template('resources/substrates/edit.html', substrate=substrate)
 
 

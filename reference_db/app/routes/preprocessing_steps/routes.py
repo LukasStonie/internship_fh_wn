@@ -63,7 +63,7 @@ def edit(preprocessing_step_id):
         form_ok, name = validate_form(request.form)
         # if the form is not valid, redirect to the new page and pass the values from the form
         if not form_ok:
-            return redirect(url_for('preprocessing_steps.edit', name=name))
+            return redirect(url_for('preprocessing_steps.edit', preprocessing_step_id=preprocessing_step_id, name=name))
         # if the form is valid, create a new slide and redirect to the index page
         else:
             # if unique constraint is violated, inform the user
@@ -80,7 +80,8 @@ def edit(preprocessing_step_id):
         # if request.args is empty, there was no attempt to submit the form
         # if request.args is not empty, the form was submitted but validation failed and the values from the form are passed
         args_len = len(request.args.keys())
-        preprocessing_step = vars(db.session.query(PreprocessingSteps).filter(PreprocessingSteps.id == preprocessing_step_id).first()) \
+        preprocessing_step = vars(
+            db.session.query(PreprocessingSteps).filter(PreprocessingSteps.id == preprocessing_step_id).first()) \
             if args_len == 0 \
             else request.args
         return render_template('resources/preprocessing_steps/edit.html', preprocessing_step=preprocessing_step)
@@ -88,7 +89,8 @@ def edit(preprocessing_step_id):
 
 @bp.route('/<preprocessing_step_id>/delete', methods=['GET', 'POST'])
 def delete(preprocessing_step_id):
-    preprocessing_step = db.session.query(PreprocessingSteps).filter(PreprocessingSteps.id == preprocessing_step_id).first()
+    preprocessing_step = db.session.query(PreprocessingSteps).filter(
+        PreprocessingSteps.id == preprocessing_step_id).first()
     db.session.delete(preprocessing_step)
     db.session.commit()
     return redirect(url_for('preprocessing_steps.index'))

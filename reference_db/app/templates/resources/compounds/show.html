@@ -20,12 +20,12 @@
                 <td>{{compound.coaddition}}</td>
             </tr>
             <tr>
-                <th>Integrationszeit</th>
-                <td>{{compound.integration_time}} ms</td>
+                <th>Integrationszeit [ms]</th>
+                <td>{{compound.integration_time}}</td>
             </tr>
             <tr>
-                <th>Laserleistung</th>
-                <td>{{compound.laser_power}} mW</td>
+                <th>Laserleistung [mW]</th>
+                <td>{{compound.laser_power}}</td>
             </tr>
             </tbody>
         </table>
@@ -38,11 +38,11 @@
                 <td>{{lookup.lens.zoom}}x, {{lookup.lens.numerical_aperture}}</td>
             </tr>
             <tr>
-                <th>Laser</th>
-                <td>{{lookup.laser.wavelength}} nm</td>
+                <th>Laser [nm]</th>
+                <td>{{lookup.laser.wavelength}}</td>
             </tr>
             <tr>
-                <th>Blende</th>
+                <th>Apertur [µm]</th>
                 <td>{{lookup.aperture.size}}</td>
             </tr>
             </tbody>
@@ -55,8 +55,8 @@
         <table class="table table-fixed">
             <tbody>
             <tr>
-                <th>Spektralbereich</th>
-                <td>{{lookup.spectral_range.start}} nm - {{lookup.spectral_range.end}} nm</td>
+                <th>Spektralbereich [cm<sup>-1</sup>]</th>
+                <td>{{lookup.spectral_range.start}} - {{lookup.spectral_range.end}}</td>
             </tr>
             <tr>
                 <th>Auflösung</th>
@@ -81,7 +81,7 @@
 </div>
 <hr>
 
-{% if compound.images|length<=0 %}
+{% if spectra|length<=0 %}
 <div class="d-flex justify-content-center align-items-center flex-column">
     <h4 class="">Es sind noch keine Spektren für diese Substanz hinterlegt</h4>
     <a type="button" class="btn btn-outline-success btn" href="{{ url_for('spectra.new', compound_id=compound.id) }}"><i
@@ -90,6 +90,53 @@
     </a>
 </div>
 {% else %}
+<h4 class="mb-3">Hinterlegte Spektren</h4>
+{% for spectrum in spectra %}
+<div class="row">
+    <div class="col-md-8 d-flex align-items-center">
+        <div class="row">
+            <div class="col-6">
+                <table class="table table-fixed">
+                    <tbody>
+                    <tr>
+                        <th>Spektrumart</th>
+                        {% for spectrum_type in lookup.spectra_type %}
+                        {% if spectrum_type.id == spectrum.spectrum_type_id %}
+                        <td>{{ spectrum_type.name }}</td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <th>Spektrum</th>
+                        <td><a class="icon-link icon-link-hover link-success"
+                               href="{{url_for('spectra.download', spectrum_id=spectrum.id)}}"><i
+                                class="bi bi-download mb-2"
+                                style="--bs-icon-link-transform: translate3d(0, .125rem, 0)">
+                        </i> Download</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-6">
+                <h6>Vorverarbeitung</h6>
+                {% if spectrum.preprocessing_steps|length>0 %}
+                {% for step in spectrum.preprocessing_steps %}
+                <h6><span class="badge text-bg-success">{{step.name}}</span></h6>
+                {% endfor %}
+                {% else %}
+                <p>Keine</p>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-4">
+        <img src="data:image/png;base64,{{plots[spectrum.id]}}" width="100%">
+    </div>
+</div>
+<hr>
+{% endfor %}
 
 {% endif %}
 {% endblock %}

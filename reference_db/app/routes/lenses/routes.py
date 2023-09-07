@@ -71,9 +71,7 @@ def new():
             # if unique constraint is violated, inform the user
             try:
                 lens = Lens(zoom=zoom, numerical_aperture=numerical_aperture)
-                print("before add")
                 db.session.add(lens)
-                print("before commit")
                 db.session.commit()
                 return redirect(url_for('lenses.index'))
 

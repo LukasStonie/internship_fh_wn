@@ -1,8 +1,58 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Spektren hinzufügen</h1>
+<a class="icon-link icon-link-hover mb-2"
+   style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+   href="{{ url_for('compounds.show', compound_id=compound_id) }}">
+    <i class="bi bi-arrow-left mb-auto"></i>
+    Zurück
+</a>
+<h1 class="mb-3">Spektren hinzufügen</h1>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for cat, mesg in messages %}
+<div class="alert alert-{{cat}} my-2" role="alert">
+    {{ mesg }}
+</div>
+{% endfor %}
+{% endwith %}
 
+<form method="POST" enctype="multipart/form-data">
+    <h5>Welche Art von Spektrum möchten Sie hinzufügen?</h5>
+    <div class="mb-3">
+        {% for type in lookup.spectrum_types %}
+        <input type="radio" class="btn-check my-1" value="{{type.id}}" id="type_radio_{{type.id}}"
+               name="spectrum_type_id"
+               autocomplete="off" {% if type.id== 1 %} checked {% endif %}>
+        <label class="btn btn-sm btn-outline-success my-1" for="type_radio_{{type.id}}">{{type.name}}</label>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div id="preprocessing_steps" class="mb-3" style="display: none">
+                <label class="form-label">Vorverarbeitungsschritte (Auswahl)</label>
+                <div>
+                    {% for step in lookup.preprocessing_steps %}
+                    <input type="checkbox" class="btn-check my-1" id="step_check_{{step.id}}" name="step_check"
+                           value="{{step.id}}"
+                           autocomplete="off">
+                    <label class="btn btn-sm btn-outline-success my-1"
+                           for="step_check_{{step.id}}">{{step.name}}</label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="spectrum" class="form-label">Spektrum</label>
+                <input class="form-control" type="file" id="spectrum" name="spectrum">
+            </div>
+
+
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary my-2">Spektren hinzufügen</button>
+
+</form>
+
+<!--
 <form method="POST" enctype="multipart/form-data">
     <div class="row">
         <div class="col-md-6">
@@ -38,4 +88,26 @@
 
 </form>
 
+-->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const options = document.getElementsByName("spectrum_type_id");
+        const contentToHide = document.getElementById("preprocessing_steps");
+
+        options.forEach(function (option) {
+            option.addEventListener("change", function () {
+                if (option.checked && option.value === "1") {
+                    console.log("hide")
+                    contentToHide.style.display = "none";
+                } else if (option.checked && option.value === "2") {
+                    console.log("display")
+
+                    contentToHide.style.display = "block";
+                }
+            });
+        });
+    });
+
+</script>
 {% endblock %}
+

@@ -7,7 +7,7 @@
     <i class="bi bi-arrow-left mb-auto"></i>
     Zurück
 </a>
-<h1>Blende bearbeiten</h1>
+<h1>Apertur bearbeiten</h1>
 {% for mesg in get_flashed_messages() %}
 <div class="alert alert-danger my-2" role="alert">
     {{ mesg }}
@@ -15,7 +15,7 @@
 {% endfor %}
 <form method="POST">
   <div class="mb-3">
-    <label for="size" class="form-label">Größe</label>
+    <label for="size" class="form-label">Größe [µm]</label>
     <input type="number" class="form-control" id="size" name="size" value="{{ aperture.size }}">
   </div>
 

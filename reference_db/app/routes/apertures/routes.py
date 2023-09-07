@@ -63,12 +63,13 @@ def edit(aperture_id):
         form_ok, size = validate_form(request.form)
         # if the form is not valid, redirect to the new page and pass the values from the form
         if not form_ok:
-            return redirect(url_for('apertures.edit', size=size))
+            return redirect(url_for('apertures.edit', aperture_id=aperture_id , size=size))
         # if the form is valid, create a new aperture and redirect to the index page
         else:
             # if unique constraint is violated, inform the user
             try:
-                aperture = Aperture(size=size)
+                aperture = db.session.query(Aperture).filter(Aperture.id == aperture_id).first()
+                aperture.size = size
                 db.session.add(aperture)
                 db.session.commit()
                 return redirect(url_for('apertures.index'))

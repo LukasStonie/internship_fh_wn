@@ -69,7 +69,7 @@ class Aperture(Base):
     __tablename__ = 'apertures'
 
     id = Column(Integer, primary_key=True)
-    size = Column(Integer, nullable=False) #TODO make this a string
+    size = Column(Integer, nullable=False) #TODO: make this a string
 
     __table_args__ = (
         UniqueConstraint('size', name='u_size'),
@@ -127,7 +127,7 @@ class Spectrum(Base):
     )
 
     def __repr__(self):
-        return f'<Spectrum "{self.name}">'
+        return f'<Spectrum "{self.file_path}" - compound: "{self.compound_id}">'
 
 
 class SpectrumType(Base):

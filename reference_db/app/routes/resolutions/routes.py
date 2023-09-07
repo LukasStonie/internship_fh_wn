@@ -63,13 +63,13 @@ def edit(resolution_id):
         form_ok, description = validate_form(request.form)
         # if the form is not valid, redirect to the new page and pass the values from the form
         if not form_ok:
-            return redirect(url_for('resolutions.edit', description=description))
+            return redirect(url_for('resolutions.edit', resolution_id=resolution_id, description=description))
         # if the form is valid, create a new slide and redirect to the index page
         else:
             # if unique constraint is violated, inform the user
             try:
                 resolution = db.session.query(Resolution).filter_by(id=resolution_id).first()
-                resolution.resolution_description = description
+                resolution.description = description
                 db.session.commit()
                 return redirect(url_for('resolutions.index'))
             except sqlalchemy.exc.IntegrityError:
@@ -77,8 +77,12 @@ def edit(resolution_id):
                 return redirect(url_for('resolutions.edit', description=description))
     # if the request method is GET, the user wants to display the form
     else:
-        resolution = db.session.query(Resolution).filter_by(id=resolution_id).first()
-        return render_template('resources/resolutions/edit.html', resolution=resolution, values=request.args)
+        args_len = len(request.args.keys())
+        resolution = vars(
+            db.session.query(Resolution).filter(Resolution.id == resolution_id).first()) \
+            if args_len == 0 \
+            else request.args
+        return render_template('resources/resolutions/edit.html', resolution=resolution)
 
 
 @bp.route('/<resolution_id>/delete', methods=['GET', 'POST'])

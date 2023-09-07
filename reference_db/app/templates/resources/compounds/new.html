@@ -26,12 +26,12 @@
                value="{{values.get('coaddition')}}">
     </div>
     <div class="col-md-4">
-        <label for="integration_time" class="form-label">Integrationszeit in ms</label>
+        <label for="integration_time" class="form-label">Integrationszeit [ms]</label>
         <input type="number" class="form-control" id="integration_time" name="integration_time" placeholder="3000"
                value="{{values.get('integration_time')}}">
     </div>
     <div class="col-md-4">
-        <label for="laser_power" class="form-label">Laserleistung in mW</label>
+        <label for="laser_power" class="form-label">Laserleistung [mW]</label>
         <input type="number" class="form-control" id="laser_power" name="laser_power" placeholder="25"
                value="{{values.get('laser_power')}}">
     </div>
@@ -39,25 +39,24 @@
         <label for="lens_id" class="form-label">Objektiv</label>
         <select class="form-select" id="lens_id" name="lens_id">
             {% for lens in lookup.lenses %}
-            <option value="{{ lens.id }}">{{ lens.zoom
-                }}x, {{lens.numerical_aperture}}
+            <option value="{{ lens.id }}">{{ lens.zoom }}x, {{lens.numerical_aperture}}
             </option>
             {% endfor %}
         </select>
     </div>
     <div class="col-md-6">
-        <label for="laser_id" class="form-label">Laser</label>
+        <label for="laser_id" class="form-label">Laser [nm]</label>
         <select class="form-select" id="laser_id" name="laser_id">
             {% for laser in lookup.lasers %}
-            <option value="{{ laser.id }}">{{ laser.wavelength }} nm</option>
+            <option value="{{ laser.id }}">{{ laser.wavelength }}</option>
             {% endfor %}
         </select>
     </div>
     <div class="col-md-6">
-        <label for="spectral_range_id" class="form-label">Spektralbereich</label>
+        <label for="spectral_range_id" class="form-label">Spektralbereich [cm<sup>-1</sup>]</label>
         <select class="form-select" id="spectral_range_id" name="spectral_range_id">
             {% for spectral_range in lookup.spectral_ranges %}
-            <option value="{{ spectral_range.id }}">{{ spectral_range.start }}nm - {{spectral_range.end}}nm</option>
+            <option value="{{ spectral_range.id }}">{{ spectral_range.start }} - {{spectral_range.end}}</option>
             {% endfor %}
         </select>
     </div>
@@ -70,7 +69,7 @@
         </select>
     </div>
     <div class="col-md-6">
-        <label for="aperture_id" class="form-label">Blende</label>
+        <label for="aperture_id" class="form-label">Apertur [µm]</label>
         <select class="form-select" id="aperture_id" name="aperture_id">
             {% for aperture in lookup.apertures %}
             <option value="{{ aperture.id }}">{{ aperture.size }}</option>
