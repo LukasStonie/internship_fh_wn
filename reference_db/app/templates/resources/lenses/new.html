@@ -9,21 +9,21 @@
     Zurück
 </a>
 
-<h1>Neues Objektiv erstellen</h1>
+<h1>Erstellen <b><em>Objektiv</em></b></h1>
 {% for mesg in get_flashed_messages() %}
 <div class="alert alert-danger my-2" role="alert">
     {{ mesg }}
 </div>
 {% endfor %}
 <form method="POST">
+    {{ form.csrf_token }}
     <div class="mb-3">
-        <label for="zoom" class="form-label">Zoom</label>
-        <input type="number" class="form-control" id="zoom" name="zoom" value="{{ values.get('zoom') }}">
+        {{form.zoom.label(class="form-label")}}
+        {{form.zoom(class="form-control", placeholder="1x")}}
     </div>
     <div class="mb-3">
-        <label for="numerical_aperture" class="form-label">Numerische Apertur</label>
-        <input type="number" class="form-control" id="numerical_aperture" name="numerical_aperture"
-               value="{{ values.get('numerical_aperture') }}">
+        {{form.numerical_aperture.label(class="form-label")}}
+        {{form.numerical_aperture(class="form-control", placeholder="1.0")}}
     </div>
     <button type="submit" class="btn btn-primary">Erstellen</button>
 </form>

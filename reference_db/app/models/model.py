@@ -100,7 +100,7 @@ class Aperture(Base):
     __tablename__ = 'apertures'
 
     id = Column(Integer, primary_key=True)
-    size = Column(String(20), nullable=False) #TODO: make this a string
+    size = Column(String(20), nullable=False)
 
     __table_args__ = (
         UniqueConstraint('size', name='u_size'),
