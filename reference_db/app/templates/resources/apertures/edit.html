@@ -7,18 +7,28 @@
     <i class="bi bi-arrow-left mb-auto"></i>
     Zurück
 </a>
-<h1>Apertur bearbeiten</h1>
+<h1>Bearbeiten <b><em>Apertur</em></b></h1>
 {% for mesg in get_flashed_messages() %}
 <div class="alert alert-danger my-2" role="alert">
     {{ mesg }}
 </div>
 {% endfor %}
 <form method="POST">
-  <div class="mb-3">
-    <label for="size" class="form-label">Größe [µm]</label>
-    <input type="number" class="form-control" id="size" name="size" value="{{ aperture.size }}">
-  </div>
+    {{ form.csrf_token}}
+    <div class="mb-3">
+        {{form.size.label(class="form-label")}}
+        {{form.size(class="form-control")}}
+        {% if form.size.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.size.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
 
-  <button type="submit" class="btn btn-primary">Speichern</button>
+    <button type="submit" class="btn btn-primary">Speichern</button>
 </form>
 {% endblock %}

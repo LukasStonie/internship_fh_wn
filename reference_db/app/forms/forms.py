@@ -28,3 +28,6 @@ class LensesForm(FlaskForm):
 
 class LasersForm(FlaskForm):
     wavelength = IntegerField('Wellenlänge [nm]', validators=[InputRequired()])
+
+class AperturesForm(FlaskForm):
+    size = IntegerField('Größe [µm]', validators=[InputRequired(message='Bitte geben Sie eine Größe an')])

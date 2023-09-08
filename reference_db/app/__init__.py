@@ -1,10 +1,13 @@
 from flask import Flask
 from config import Config
 from app.extensions import db
+from flask_babel import Babel
 
 
 def create_app(config_class=Config):
     app = Flask(__name__)
+    babel = Babel(app)
+    app.config['BABEL_DEFAULT_LOCALE'] = 'de'
     app.config.from_object(config_class)
 
     # Initialize Flask extensions here
