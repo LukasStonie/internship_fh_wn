@@ -52,3 +52,6 @@ class ResolutionsForm(FlaskForm):
 
 class SpectralTypesForm(FlaskForm):
     description = StringField('Bezeichnung', validators=[InputRequired(message='Bitte geben Sie eine Bezeichnung an')])
+
+class PreprocessingStepsForm(FlaskForm):
+    name = StringField('Bezeichnung', validators=[InputRequired(message='Bitte geben Sie eine Bezeichnung an')])
