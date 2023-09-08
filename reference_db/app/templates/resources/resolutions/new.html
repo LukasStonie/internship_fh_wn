@@ -14,10 +14,20 @@
     {{ mesg }}
 </div>
 {% endfor %}
-<form method="POST">
+<form method="POST" novalidate>
+    {{ form.csrf_token }}
     <div class="mb-3">
-        <label for="description" class="form-label">Auflösung</label>
-        <input type="text" class="form-control" id="description" name="description" value="{{ values.get('description') if values.get('description') != None else ''  }}">
+        {{form.description.label(class="form-label")}}
+        {{form.description(class="form-control", placeholder="2.0 - 3.5")}}
+        {% if form.description.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.description.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
     <button type="submit" class="btn btn-primary">Erstellen</button>
 </form>
