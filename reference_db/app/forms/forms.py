@@ -49,3 +49,6 @@ class SpectralRangesForm(FlaskForm):
 
 class ResolutionsForm(FlaskForm):
     description = StringField('Bezeichnung', validators=[InputRequired(message='Bitte geben Sie eine Bezeichnung an')])
+
+class SpectralTypesForm(FlaskForm):
+    description = StringField('Bezeichnung', validators=[InputRequired(message='Bitte geben Sie eine Bezeichnung an')])
