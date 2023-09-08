@@ -5,7 +5,7 @@ from app.routes.auth import bp
 from app.models.model import User, Group
 from app.extensions import db
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, login_required
 
 
 @bp.route('/signup/', methods=['GET'])
@@ -55,7 +55,7 @@ def login_post():
     # check if the user exists
     user = db.session.query(User).filter_by(email=form.email.data).first()
 
-    #check if the user is allowed to login
+    # check if the user is allowed to login
     if user and user.active == False:
         flash('Ihr Account wurde noch nicht freigeschaltet', 'danger')
         return render_template('resources/auth/login.html', form=form)
@@ -67,4 +67,11 @@ def login_post():
 
     # if the user exists and the password is correct, log the user in
     login_user(user, remember=True)
+    return redirect(url_for('main.index'))
+
+
+@bp.route('/logout/')
+@login_required
+def logout():
+    logout_user()
     return redirect(url_for('main.index'))

@@ -94,7 +94,7 @@ def new_post():
                 compound.description = form.description.data
 
             compound.date = date.today().strftime("%d.%m.%Y")
-            compound.user = current_user.email  # TODO: get user from session
+            compound.user = current_user.email
             db.session.add(compound)
             db.session.commit()
             return redirect(url_for('compounds.index'))
