@@ -25,3 +25,6 @@ class LoginForm(FlaskForm):
 class LensesForm(FlaskForm):
     zoom = IntegerField('Zoom', validators=[InputRequired() ])
     numerical_aperture = IntegerField('Numerische Apertur', validators=[InputRequired()])
+
+class LasersForm(FlaskForm):
+    wavelength = IntegerField('Wellenlänge [nm]', validators=[InputRequired()])

@@ -14,11 +14,12 @@
 </div>
 {% endfor %}
 <form method="POST">
-  <div class="mb-3">
-    <label for="wavelength" class="form-label">Wellenlänge [nm]</label>
-    <input type="number" class="form-control" id="wavelength" name="wavelength" value="{{ laser.wavelength }}">
-  </div>
+    {{form.csrf_token}}
+    <div class="mb-3">
+        {{ form.wavelength.label(class="form-label") }}
+        {{ form.wavelength(class="form-control", placeholder="758")}}
+    </div>
 
-  <button type="submit" class="btn btn-primary">Speichern</button>
+    <button type="submit" class="btn btn-primary">Speichern</button>
 </form>
 {% endblock %}

@@ -9,16 +9,17 @@
     Zurück
 </a>
 
-<h1>Neuen Laser erstellen</h1>
+<h1>Erstellen <b><em>Laser</em></b></h1>
 {% for mesg in get_flashed_messages() %}
 <div class="alert alert-danger my-2" role="alert">
     {{ mesg }}
 </div>
 {% endfor %}
 <form method="POST">
+    {{form.csrf_token}}
     <div class="mb-3">
-        <label for="wavelength" class="form-label">Wellenlänge [nm]</label>
-        <input type="number" class="form-control" id="wavelength" name="wavelength" value="{{ values.get('wavelength') }}">
+        {{ form.wavelength.label(class="form-label") }}
+        {{ form.wavelength(class="form-control", placeholder="758")}}
     </div>
     <button type="submit" class="btn btn-primary">Erstellen</button>
 </form>
