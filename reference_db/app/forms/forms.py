@@ -34,3 +34,8 @@ class AperturesForm(FlaskForm):
 
 class SlidesForm(FlaskForm):
     name = StringField('Bezeichnung', validators=[InputRequired(message='Bitte geben Sie eine Bezeichnung an')])
+
+
+class SpectralRangesForm(FlaskForm):
+    start = IntegerField(label="Start [cm<sup>-1</sup>]", validators=[InputRequired(message='Bitte geben Sie einen Startwert an')])
+    end = IntegerField('Ende [cm^-1]', validators=[InputRequired(message='Bitte geben Sie einen Endwert an')])
