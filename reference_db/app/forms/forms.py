@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
 from wtforms import (StringField, TextAreaField, IntegerField, BooleanField,
-                     RadioField, PasswordField)
+                     RadioField, PasswordField, SelectField)
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import InputRequired, Length, Email, EqualTo
 
@@ -63,3 +63,27 @@ class PreprocessingStepsForm(FlaskForm):
 class SubstratesForm(FlaskForm):
     name = StringField('Bezeichnung', validators=[InputRequired(message='Bitte geben Sie eine Bezeichnung an')])
     instructions = FileField('Anleitung', validators=[])
+
+
+class CompoundsForm(FlaskForm):
+    name = StringField('Bezeichnung', validators=[InputRequired(message='Bitte geben Sie eine Bezeichnung an')])
+    coaddition = IntegerField('Koaddition', validators=[InputRequired(message='Bitte geben Sie eine Koaddition an')])
+    integration_time = IntegerField('Integrationszeit [ms]',
+                                    validators=[InputRequired(message='Bitte geben Sie eine Integrationszeit an')])
+    laser_power = IntegerField('Laserleistung [mW]',
+                               validators=[InputRequired(message='Bitte geben Sie eine Laserleistung an')])
+    description = StringField('Beschreibung', validators=[])
+
+    lenses = SelectField('Objektiv', validate_choice=False, choices=[('penis', 'Male'), ('vag', 'Female')], default='vag',
+                         validators=[InputRequired(message='Bitte wählen Sie ein Objektiv aus')])
+    lasers = SelectField('Laser', validate_choice=False,
+                         validators=[InputRequired(message='Bitte wählen Sie einen Laser aus')])
+    apertures = SelectField('Blende [µm]', validate_choice=False,
+                            validators=[InputRequired(message='Bitte wählen Sie eine Blende aus')])
+    slides = SelectField('Objektträger', validate_choice=False,
+                         validators=[InputRequired(message='Bitte wählen Sie einen Objektträger aus')])
+    spectral_ranges = SelectField('Spektralbereich', validate_choice=False,
+                                  validators=[InputRequired(message='Bitte wählen Sie einen Spektralbereich aus')])
+    resolutions = SelectField('Auflösung', validate_choice=False,
+                              validators=[InputRequired(message='Bitte wählen Sie eine Auflösung aus')])
+    substrates = SelectField('Substrat', validate_choice=False, validators=[])

@@ -14,94 +14,172 @@
     {{ mesg }}
 </div>
 {% endfor %}
-<form method="POST" class="row g-3">
+<form method="POST" class="row g-3" novalidate>
+    {{ form.csrf_token}}
+
     <div class="col-12">
-        <label for="name" class="form-label">Bezeichnung</label>
-        <input type="text" class="form-control" id="name" name="name" placeholder="Adenin"
-               value="{{compound.name}}">
+        {{form.name.label(class="form-label")}}
+        {{form.name(class="form-control", placeholder="Pyruvat")}}
+        {% if form.name.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.name.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
     <div class="col-md-4">
-        <label for="coaddition" class="form-label">Koaddition</label>
-        <input type="number" class="form-control" id="coaddition" name="coaddition" placeholder="10"
-               value="{{compound.coaddition}}">
+        {{form.coaddition.label(class="form-label")}}
+        {{form.coaddition(class="form-control", placeholder="10")}}
+        {% if form.coaddition.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.coaddition.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
     <div class="col-md-4">
-        <label for="integration_time" class="form-label">Integrationszeit [ms]</label>
-        <input type="number" class="form-control" id="integration_time" name="integration_time" placeholder="3000"
-               value="{{compound.integration_time}}">
+        {{form.integration_time.label(class="form-label")}}
+        {{form.integration_time(class="form-control", placeholder="3000")}}
+        {% if form.integration_time.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.integration_time.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
     <div class="col-md-4">
-        <label for="laser_power" class="form-label">Laserleistung [mW]</label>
-        <input type="number" class="form-control" id="laser_power" name="laser_power" placeholder="25"
-               value="{{compound.laser_power}}">
+        {{form.laser_power.label(class="form-label")}}
+        {{form.laser_power(class="form-control", placeholder="25")}}
+        {% if form.laser_power.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.laser_power.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
     <div class="col-md-6">
-        <label for="lens_id" class="form-label">Objektiv</label>
-        <select class="form-select" id="lens_id" name="lens_id">
-            {% for lens in lookup.lenses %}
-            <option {% if compound.lens_id== lens.id %}selected{% endif %} value="{{ lens.id }}">{{ lens.zoom }}x, {{lens.numerical_aperture}}
-            </option>
+        {{form.lenses.label(class="form-label")}}
+        {{form.lenses(class="form-select")}}
+        {% if form.lenses.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.lenses.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
             {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        {{form.lasers.label(class="form-label")}}
+        {{form.lasers(class="form-select")}}
+        {% if form.lasers.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.lasers.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+
+        <label for="{{form.spectral_ranges.id}}" class="form-label">Spektralbereich [cm<sup>-1</sup>]</label>
+        {{form.spectral_ranges(class="form-select")}}
+        {% if form.spectral_ranges.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.spectral_ranges.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        {{form.resolutions.label(class="form-label")}}
+        {{form.resolutions(class="form-select")}}
+        {% if form.resolutions.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.resolutions.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        {{form.apertures.label(class="form-label")}}
+        {{form.apertures(class="form-select")}}
+        {% if form.apertures.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.apertures.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        {{form.slides.label(class="form-label")}}
+        {{form.slides(class="form-select")}}
+        {% if form.slides.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.slides.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
         </select>
     </div>
     <div class="col-md-6">
-        <label for="laser_id" class="form-label">Laser [nm]</label>
-        <select class="form-select" id="laser_id" name="laser_id">
-            {% for laser in lookup.lasers %}
-            <option {% if compound.laser_id== laser.id %}selected{% endif %} value="{{ laser.id }}">{{ laser.wavelength }}</option>
+        {{form.substrates.label(class="form-label")}}
+        {{form.substrates(class="form-select")}}
+        {% if form.substrates.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.substrates.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
             {% endfor %}
-        </select>
-    </div>
-    <div class="col-md-6">
-        <label for="spectral_range_id" class="form-label">Spektralbereich [cm<sup>-1</sup>]</label>
-        <select class="form-select" id="spectral_range_id" name="spectral_range_id">
-            {% for spectral_range in lookup.spectral_ranges %}
-            <option {% if compound.spectral_range_id== spectral_range.id %}selected{% endif %} value="{{ spectral_range.id }}">{{ spectral_range.start }} - {{spectral_range.end}}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="col-md-6">
-        <label for="resolution_id" class="form-label">Auflösung</label>
-        <select class="form-select" id="resolution_id" name="resolution_id">
-            {% for resolution in lookup.resolutions %}
-            <option {% if compound.resolution_id== resolution.id %}selected{% endif %} value="{{ resolution.id }}">{{ resolution.description }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="col-md-6">
-        <label for="aperture_id" class="form-label">Apertur [µm]</label>
-        <select class="form-select" id="aperture_id" name="aperture_id">
-            {% for aperture in lookup.apertures %}
-            <option {% if compound.aperture_id== aperture.id %}selected{% endif %} value="{{ aperture.id }}">{{ aperture.size }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="col-md-6">
-        <label for="slide_id" class="form-label">Objektträger</label>
-        <select class="form-select" id="slide_id" name="slide_id">
-            {% for slide in lookup.slides %}
-            <option {% if compound.slide_id== slide.id %}selected{% endif %} value="{{ slide.id }}">{{ slide.name }}
-            </option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="col-md-6">
-        <label for="substrate_id" class="form-label">Substrat (optional)</label>
-        <select class="form-select" id="substrate_id" name="substrate_id">
-            <option {% if compound.substrate_id== None %}selected{% endif %} value=None>keines</option>
-            {% for substrate in lookup.substrates %}
-            <option {% if compound.substrate_id== substrate.id %}selected{% endif %} value="{{ substrate.id }}">{{ substrate.name }}</option>
-            {% endfor %}
-        </select>
+        </div>
+        {% endif %}
     </div>
 
     <div class="col-md-12">
-        <label for="description" class="form-label">Beschreibung (optional)</label>
-        <textarea class="form-control" id="description" name="description"
-                  placeholder="Konzentration, Volumen, ...">{% if compound.description != None %}{{ compound.description }}{% endif %}</textarea>
+        {{form.description.label(class="form-label")}}
+        {{form.description(class="form-control")}}
+        {% if form.description.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.description.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
+
+
     <div class="col-12">
-        <button type="submit" class="btn btn-primary">Speichern</button>
+        <button type="submit" class="btn btn-primary">Erstellen</button>
     </div>
 </form>
 
