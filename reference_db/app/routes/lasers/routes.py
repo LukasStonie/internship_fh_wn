@@ -29,7 +29,7 @@ def new_post():
     form = LasersForm(request.form)
     # if the form is not valid, redirect to the new page and pass the values from the form
     if not form.validate():
-        return render_template('resources/laser/new.html', form=form)
+        return render_template('resources/lasers/new.html', form=form)
     # if the form is valid, create a new lens and redirect to the index page
     else:
         # if unique constraint is violated, inform the user
@@ -40,7 +40,7 @@ def new_post():
             return redirect(url_for('lasers.index'))
         except sqlalchemy.exc.IntegrityError:
             flash('Diese Wellenlänge existiert bereits', 'error')
-            return render_template('resources/laser/new.html', form=form)
+            return render_template('resources/lasers/new.html', form=form)
 
 
 @bp.route('/<laser_id>/edit', methods=['GET'])
@@ -58,7 +58,7 @@ def edit_post(laser_id):
     form = LasersForm(request.form)
     # if the form is not valid, redirect to the new page and pass the values from the form
     if not form.validate():
-        return render_template('resources/lasers/edit', form=form)
+        return render_template('resources/lasers/edit.html', form=form)
         # if the form is valid, create a new lens and redirect to the index page
     else:
         # if unique constraint is violated, inform the user

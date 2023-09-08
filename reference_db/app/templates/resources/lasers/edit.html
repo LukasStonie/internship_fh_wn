@@ -13,11 +13,20 @@
     {{ mesg }}
 </div>
 {% endfor %}
-<form method="POST">
+<form method="POST" novalidate>
     {{form.csrf_token}}
     <div class="mb-3">
         {{ form.wavelength.label(class="form-label") }}
         {{ form.wavelength(class="form-control", placeholder="758")}}
+        {% if form.wavelength.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.wavelength.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
 
     <button type="submit" class="btn btn-primary">Speichern</button>

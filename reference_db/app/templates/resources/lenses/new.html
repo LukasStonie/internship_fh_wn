@@ -15,15 +15,33 @@
     {{ mesg }}
 </div>
 {% endfor %}
-<form method="POST">
+<form method="POST" novalidate>
     {{ form.csrf_token }}
     <div class="mb-3">
         {{form.zoom.label(class="form-label")}}
         {{form.zoom(class="form-control", placeholder="1x")}}
+        {% if form.zoom.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.zoom.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
     <div class="mb-3">
         {{form.numerical_aperture.label(class="form-label")}}
         {{form.numerical_aperture(class="form-control", placeholder="1.0")}}
+        {% if form.numerical_aperture.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.numerical_aperture.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
     <button type="submit" class="btn btn-primary">Erstellen</button>
 </form>
