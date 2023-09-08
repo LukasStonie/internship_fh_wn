@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField
 from wtforms import (StringField, TextAreaField, IntegerField, BooleanField,
                      RadioField, PasswordField)
 from wtforms.fields.html5 import EmailField
@@ -50,8 +51,15 @@ class SpectralRangesForm(FlaskForm):
 class ResolutionsForm(FlaskForm):
     description = StringField('Bezeichnung', validators=[InputRequired(message='Bitte geben Sie eine Bezeichnung an')])
 
+
 class SpectralTypesForm(FlaskForm):
     description = StringField('Bezeichnung', validators=[InputRequired(message='Bitte geben Sie eine Bezeichnung an')])
 
+
 class PreprocessingStepsForm(FlaskForm):
     name = StringField('Bezeichnung', validators=[InputRequired(message='Bitte geben Sie eine Bezeichnung an')])
+
+
+class SubstratesForm(FlaskForm):
+    name = StringField('Bezeichnung', validators=[InputRequired(message='Bitte geben Sie eine Bezeichnung an')])
+    instructions = FileField('Anleitung', validators=[])

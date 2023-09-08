@@ -7,30 +7,56 @@
     <i class="bi bi-arrow-left mb-auto"></i>
     Zurück
 </a>
-<h1>Substrat bearbeiten</h1>
+<h1>Bearbeiten <b><em>Substrat</em></b></h1>
 {% for mesg in get_flashed_messages() %}
 <div class="alert alert-danger my-2" role="alert">
     {{ mesg }}
 </div>
 {% endfor %}
-<form method="POST" enctype="multipart/form-data">
+
+
+<form method="POST" enctype="multipart/form-data" novalidate>
+    {{ form.csrf_token }}
     <div class="mb-3">
-        <label for="name" class="form-label">Bezeichnung</label>
-        <input type="text" class="form-control" id="name" name="name" value="{{ substrate.name }}">
+        {{form.name.label(class="form-label")}}
+        {{form.name(class="form-control", placeholder="Gold Nanopartikel")}}
+        {% if form.name.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.description.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
     {% if substrate.filename %}
     <div class="input-group mb-3">
-        <a class="btn btn-outline-success" type="button" id="button-download" href="{{url_for('substrates.download', substrate_id=substrate.id)}}"><i class="bi bi-download"></i> Herunterladen</a>
-        <a class="btn btn-outline-danger" type="button" id="button-delete" href="{{url_for('substrates.remove_file', substrate_id=substrate.id)}}"><i class="bi bi-trash-fill"></i> Löschen</a>
+        <a class="btn btn-outline-success" type="button" id="button-download"
+           href="{{url_for('substrates.download', substrate_id=substrate.id)}}"><i class="bi bi-download"></i>
+            Herunterladen</a>
+        <a class="btn btn-outline-danger" type="button" id="button-delete"
+           href="{{url_for('substrates.remove_file', substrate_id=substrate.id)}}"><i class="bi bi-trash-fill"></i>
+            Löschen</a>
         <input type="text" class="form-control" aria-label="Example text with button addon"
                aria-describedby="button-addon1" value="{{substrate.filename}}" disabled>
     </div>
     {% else %}
     <div class="mb-3">
-        <label for="instruction" class="form-label">Herstellungsanleitung</label>
-        <input class="form-control" type="file" id="instruction" name="instruction" accept=".doc,.docx,.pdf,.txt">
+        {{form.instructions.label(class="form-label")}}
+        {{form.instructions(class="form-control", accept=".doc,.docx,.pdf,.txt")}}
+        {% if form.instructions.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.instructions.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
     {% endif %}
     <button type="submit" class="btn btn-primary">Speichern</button>
 </form>
+
 {% endblock %}
