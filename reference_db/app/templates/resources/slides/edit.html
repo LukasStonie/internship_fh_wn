@@ -13,12 +13,23 @@
     {{ mesg }}
 </div>
 {% endfor %}
-<form method="POST">
-  <div class="mb-3">
-    <label for="name" class="form-label">Bezeichnung</label>
-    <input type="text" class="form-control" id="name" name="name" value="{{ slide.name }}">
-  </div>
 
-  <button type="submit" class="btn btn-primary">Speichern</button>
+<form method="POST" novalidate>
+    {{ form.csrf_token}}
+    <div class="mb-3">
+        {{form.name.label(class="form-label")}}
+        {{form.name(class="form-control")}}
+        {% if form.name.errors %}
+        <div class="alert alert-danger my-3" role="alert">
+            {% for error in form.name.errors %}
+            <p class="mb-0">
+                {{ error }}
+            </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </div>
+    <button type="submit" class="btn btn-primary">Erstellen</button>
 </form>
 {% endblock %}

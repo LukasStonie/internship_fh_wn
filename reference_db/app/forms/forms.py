@@ -23,11 +23,14 @@ class LoginForm(FlaskForm):
 
 
 class LensesForm(FlaskForm):
-    zoom = IntegerField('Zoom', validators=[InputRequired() ])
-    numerical_aperture = IntegerField('Numerische Apertur', validators=[InputRequired()])
+    zoom = IntegerField('Zoom', validators=[InputRequired(message="Bitte geben Sie eine Vergößerung ein") ])
+    numerical_aperture = IntegerField('Numerische Apertur', validators=[InputRequired(message="Bitte geben Sie eine numerische Apertur ein")])
 
 class LasersForm(FlaskForm):
-    wavelength = IntegerField('Wellenlänge [nm]', validators=[InputRequired()])
+    wavelength = IntegerField('Wellenlänge [nm]', validators=[InputRequired(message='Bitte geben Sie eine Wellenlänge an')])
 
 class AperturesForm(FlaskForm):
     size = IntegerField('Größe [µm]', validators=[InputRequired(message='Bitte geben Sie eine Größe an')])
+
+class SlidesForm(FlaskForm):
+    name = StringField('Bezeichnung', validators=[InputRequired(message='Bitte geben Sie eine Bezeichnung an')])
