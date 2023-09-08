@@ -3,6 +3,7 @@ from flask import render_template, request, url_for, flash, redirect
 from app.routes.lasers import bp
 from app.models.model import Laser
 from app.extensions import db
+from flask_login import login_required, current_user
 
 
 def validate_form(form):
@@ -19,9 +20,10 @@ def validate_form(form):
 
 
 @bp.route('/')
+@login_required
 def index():
     lasers = db.session.query(Laser).all()
-    return render_template('resources/lasers/index.html', lasers=lasers)
+    return render_template('resources/lasers/index.html', lasers=lasers, name=current_user)
 
 
 @bp.route('/new', methods=['GET', 'POST'])

@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row h-100">
+
+    <div class="col-md-6 d-flex mx-auto flex-column">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        <div class="row">
+            {% for category, message in messages %}
+            <div class="alert alert-{{category}} my-2" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endwith %}
+        <div class="row">
+            <div class="col-12 d-flex align-items-center justify-content-start">
+                <h1>Account erstellen</h1>
+            </div>
+        </div>
+
+
+        <form method="POST" class="g-3 mb-5">
+            {{ form.csrf_token }}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{form.firstname.label(class="form-label")}}
+                    {{form.firstname(class="form-control", placeholder="Max")}}
+
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{form.lastname.label(class="form-label")}}
+                    {{form.lastname(class="form-control", placeholder="Mustermann")}}
+
+                </div>
+
+                <div class="mb-3">
+                    {{form.email.label(class="form-label")}}
+                    {{form.email(class="form-control", placeholder="user@domain.at")}}
+                </div>
+                <div class="mb-3">
+                    {{form.password.label(class="form-label")}}
+                    {{form.password(class="form-control", type="password")}}
+                    {% if form.password.errors %}
+                    <div class="alert alert-danger my-3" role="alert">
+                            {% for error in form.password.errors %}
+                            <p class="mb-0">
+                                {{ error }}
+                            </p>
+                            {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{form.password_repeat.label(class="form-label")}}
+                    {{form.password_repeat(class="form-control", type="password")}}
+                    {% if form.password_repeat.errors %}
+                    <div class="alert alert-danger my-1" role="alert">
+                        <ul>
+                            {% for error in form.password_repeat.errors %}
+                            <li>
+                                {{ error }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Erstellen</button>
+        </form>
+        <div class="row">
+            <div class="col-12 d-flex align-items-center justify-content-evenly">
+                <span>Sie haben bereits einen Account? </span> <a class="link-primary"
+                                                                  href="{{url_for('auth.login')}}"> Hier
+                anmelden</a>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

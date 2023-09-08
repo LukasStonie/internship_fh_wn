@@ -8,13 +8,15 @@
     <i class="bi bi-arrow-left mb-auto"></i>
     Zurück
 </a>
-<h1>Neue Referenzsubstanz erstellen</h1>
+<h1>Erstellen <b><em>Referenzsubstanzen</em></b></h1>
 {% for mesg in get_flashed_messages() %}
 <div class="alert alert-danger my-2" role="alert">
     {{ mesg }}
 </div>
 {% endfor %}
 <form method="POST" class="row g-3">
+
+
     <div class="col-12">
         <label for="name" class="form-label">Bezeichnung</label>
         <input type="text" class="form-control" id="name" name="name" placeholder="Adenin"
@@ -99,6 +101,8 @@
         <textarea class="form-control" id="description" name="description"
                   placeholder="Konzentration, Volumen, ...">{% if values.get('description') != None %}{{ values.get('description') }}{% endif %}</textarea>
     </div>
+    
+
     <div class="col-12">
         <button type="submit" class="btn btn-primary">Erstellen</button>
     </div>

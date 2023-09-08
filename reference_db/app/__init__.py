@@ -3,7 +3,6 @@ from config import Config
 from app.extensions import db
 
 
-
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
@@ -11,9 +10,26 @@ def create_app(config_class=Config):
     # Initialize Flask extensions here
     db.init_app(app)
 
+    # csrf token for forms
+    from app.extensions import csrf
+    csrf.init_app(app)
+    # user session management
+    from flask_login import LoginManager
+    login_manager = LoginManager()
+    login_manager.login_view = 'auth.login'
+    login_manager.init_app(app)
+
+    from app.models.model import User
+    @login_manager.user_loader
+    def load_user(user_id):
+        return db.session.query(User).get(int(user_id))
+
     # Register blueprints here
     from app.routes.main import bp as main_bp
     app.register_blueprint(main_bp)
+
+    from app.routes.auth import bp as auth_bp
+    app.register_blueprint(auth_bp, url_prefix='/auth')
 
     from app.routes.lenses import bp as lenses_bp
     app.register_blueprint(lenses_bp, url_prefix='/lenses')

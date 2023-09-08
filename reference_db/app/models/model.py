@@ -1,10 +1,41 @@
-from sqlalchemy import Table, Column, Integer, BLOB, String, ForeignKey, UniqueConstraint
+from sqlalchemy import Table, Column, Integer, BLOB, String, ForeignKey, UniqueConstraint, BOOLEAN
 from sqlalchemy.orm import declarative_base, relationship
+from flask_login import UserMixin
 
 import app
 
 Base = declarative_base()
 
+
+class User(UserMixin, Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True)
+    first_name = Column(String(80), index=True, nullable=False)
+    last_name = Column(String(80), index=True, nullable=False)
+    email = Column(String(120), index=True, nullable=False)
+    password_hash = Column(String(128), nullable=False)
+    group_id = Column(Integer, nullable=False)
+    active = Column(BOOLEAN, nullable=False)
+    __table_args__ = (
+        UniqueConstraint('email', name='u_email'),
+    )
+
+    def __repr__(self):
+        return f'<User "{self.username}">'
+
+
+class Group(Base):
+    __tablename__ = 'groups'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(64), index=True, nullable=False)
+    __table_args__ = (
+        UniqueConstraint('name', name='u_name'),
+    )
+
+    def __repr__(self):
+        return f'<Group "{self.name}">'
 
 class Substrate(Base):
     __tablename__ = 'substrates'
@@ -69,7 +100,7 @@ class Aperture(Base):
     __tablename__ = 'apertures'
 
     id = Column(Integer, primary_key=True)
-    size = Column(Integer, nullable=False) #TODO: make this a string
+    size = Column(String(20), nullable=False) #TODO: make this a string
 
     __table_args__ = (
         UniqueConstraint('size', name='u_size'),
