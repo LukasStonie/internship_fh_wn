@@ -31,7 +31,7 @@ def signup_post():
         return render_template('resources/auth/signup.html', form=form)
 
     # create a new user
-    new_user = User(first_name=form.firstname.data, last_name=form.last_name.data, email=form.email.data,
+    new_user = User(first_name=form.firstname.data, last_name=form.lastname.data, email=form.email.data,
                     password_hash=generate_password_hash(form.password.data, method='sha256'), group_id=2, active=False)
 
     # add the new user to the database
@@ -57,7 +57,7 @@ def login_post():
 
     # check if the user is allowed to login
     if user and user.active == False:
-        flash('Ihr Account wurde noch nicht freigeschaltet', 'danger')
+        flash('Ihr Account wurde noch nicht freigeschaltet. Wenden Sie sich an einen Administrator.', 'danger')
         return render_template('resources/auth/login.html', form=form)
 
     # if the user does not exist or the password is wrong, redirect to the login page

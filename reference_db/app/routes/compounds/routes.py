@@ -11,52 +11,6 @@ from datetime import date
 import base64
 
 
-def validate_form(form):
-    # check if the form is valid
-    form_ok = True
-    # check every field if it is empty
-    # set form_ok to False if any field is empty
-    if not form['name']:
-        flash('Bezeichnung ist ein Pflichtfeld', 'error')
-        form_ok = False
-    if not form['coaddition']:
-        flash('Koaddition ist ein Pflichtfeld', 'error')
-        form_ok = False
-    if not form['integration_time']:
-        flash('Integrationszeit ist ein Pflichtfeld', 'error')
-        form_ok = False
-    if not form['lens_id']:
-        flash('Linse ist ein Pflichtfeld', 'error')
-        form_ok = False
-    if not form['laser_id']:
-        flash('Laser ist ein Pflichtfeld', 'error')
-        form_ok = False
-    if not form['laser_power']:
-        flash('Laserleistung ist ein Pflichtfeld', 'error')
-        form_ok = False
-    if not form['spectral_range_id']:
-        flash('Spektralbereich ist ein Pflichtfeld', 'error')
-        form_ok = False
-    if not form['resolution_id']:
-        flash('Auflösung ist ein Pflichtfeld', 'error')
-        form_ok = False
-    if not form['aperture_id']:
-        flash('Blende ist ein Pflichtfeld', 'error')
-        form_ok = False
-    if not form['slide_id']:
-        flash('Objektträger ist ein Pflichtfeld', 'error')
-        form_ok = False
-
-    # return whether form is valid
-    # return the values from the form for new compound or redirect
-    return form_ok, form['name'], \
-        form['coaddition'], form['integration_time'], \
-        form['lens_id'], form['laser_id'], \
-        form['laser_power'], form['spectral_range_id'], \
-        form['resolution_id'], form['aperture_id'], \
-        form['slide_id']
-
-
 @bp.route('/')
 @login_required
 def index():
@@ -75,7 +29,13 @@ def new():
 @login_required
 def new_post():
     # convert request.form to form object
-    form = CompoundsForm(request.form)
+    # form = CompoundsForm(request.form)
+    form = build_compound_form()
+    form.name.data = request.form['name']
+    form.coaddition.data = request.form['coaddition']
+    form.integration_time.data = request.form['integration_time']
+    form.laser_power.data = request.form['laser_power']
+    form.description.data = request.form['description']
     # if the form is not valid, redirect to the new page and pass the values from the form
     if not form.validate():
         return render_template('resources/compounds/new.html', form=form)
@@ -97,7 +57,11 @@ def new_post():
             compound.user = current_user.email
             db.session.add(compound)
             db.session.commit()
-            return redirect(url_for('compounds.index'))
+
+            if form.create.data:
+                return redirect(url_for('compounds.index'))
+            elif form.create_and_add.data:
+                return redirect(url_for('spectra.new', compound_id=compound.id))
         except sqlalchemy.exc.IntegrityError:
             flash('Diese Bezeichnung existiert bereits', 'error')
             return render_template('resources/compounds/new.html', form=form)
@@ -132,7 +96,9 @@ def edit(compound_id):
 @login_required
 def edit_post(compound_id):
     # convert request.form to form object
+
     form = CompoundsForm(request.form)
+
     # if the form is not valid, redirect to the new page and pass the values from the form
     if not form.validate():
         return render_template('resources/compounds/edit.html', form=form)
@@ -200,7 +166,6 @@ def show(compound_id):
         with open(image_path, 'rb') as f:
             plots[i.id] = base64.b64encode(f.read()).lstrip(b'\n').decode('utf-8')
 
-    print(plots)
     return render_template('resources/compounds/show.html', compound=compound, lookup=lookup, spectra=spectra,
                            plots=plots)
 

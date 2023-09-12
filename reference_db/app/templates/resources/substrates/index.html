@@ -1,12 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<a class="icon-link icon-link-hover mb-2"
-   style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
-   href="{{ url_for('main.index') }}">
-    <i class="bi bi-arrow-left mb-auto"></i>
-    Zurück
-</a>
+{% include 'includes/backToStart.html' %}
+
 <div class="row">
     <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
         <h1>Übersicht <b><em>Substrate</em></b></h1>
@@ -35,7 +31,8 @@
         <td>{{ substrate.name }}</td>
         <td>
             {% if substrate.instruction %}
-            <a class="link-primary" href="{{url_for('substrates.download', substrate_id=substrate.id)}}" target="_blank">
+            <a class="link-primary" href="{{url_for('substrates.download', substrate_id=substrate.id)}}"
+               target="_blank">
                 Download
             </a>
             {% else %}

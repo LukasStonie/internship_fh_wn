@@ -90,7 +90,31 @@
     </a>
 </div>
 {% else %}
-<h4 class="mb-3">Hinterlegte Spektren</h4>
+<div class="row">
+    <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+        <h4 class="mb-3">Hinterlegte Spektren</h4>
+    </div>
+    <div class="col-12 col-md-6 d-flex align-items-center justify-content-start justify-content-md-end">
+        <div class="btn-group dropdown-center">
+            <a type="button" class="btn btn-outline-success btn-sm"
+               href="{{ url_for('spectra.new', compound_id=compound.id) }}"><i
+                    class="bi bi-plus-lg"></i>
+                Spektrum hinzufügen
+            </a>
+            <a type="button" class="btn btn-outline-success btn-sm dropdown-toggle dropdown-toggle-split"
+               data-bs-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="btn btn-outline-success dropdown-item" type="button"
+                       href="{{url_for('spectra.peaks', compound_id=compound.id)}}">Peaks erstellen</a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
 {% for spectrum in spectra %}
 <div class="row">
     <div class="col-md-8 d-flex align-items-center">
@@ -117,6 +141,15 @@
                     </tr>
                     </tbody>
                 </table>
+                <div class="row g-3">
+                    <div class="col">
+                        <a class="btn btn-outline-primary btn-sm"
+                           href="{{url_for('spectra.edit', spectrum_id=spectrum.id)}}"><i class="bi bi-pencil-fill"></i> Bearbeiten</a>
+                        <a class="btn btn-outline-danger btn-sm"
+                           href="{{url_for('spectra.delete', spectrum_id=spectrum.id)}}"><i class="bi bi-trash-fill"></i> Löschen</a>
+                    </div>
+
+                </div>
             </div>
             <div class="col-6">
                 <h6>Vorverarbeitung</h6>

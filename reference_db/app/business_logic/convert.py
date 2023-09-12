@@ -5,11 +5,11 @@ from werkzeug.datastructures import FileStorage
 from app.external_libs.raman_lib.opus_converter import convert_opus
 import tempfile
 
+from app.external_libs.raman_lib.preprocessing import PeakPicker
+
 
 def spectrum_to_df(file: FileStorage) -> pd.DataFrame:
     with tempfile.NamedTemporaryFile() as temp:
-        print(temp.name)
-        print(file.filename)
         file.save(temp.name)
         if file.filename.lower().endswith(".csv") or \
                 file.filename.lower().endswith(".dpt"):
@@ -27,3 +27,4 @@ def spectrum_to_df(file: FileStorage) -> pd.DataFrame:
 
         spectrum = np.asarray(spectrum, dtype=float)
     return pd.DataFrame(spectrum[:, :], columns=spectrum[0, :])
+

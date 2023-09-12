@@ -23,26 +23,31 @@
         {% for choice in form.spectrum_type.choices %}
         <input type="radio" class="btn-check my-1" value="{{choice[0]}}" id="type_radio_{{choice[0]}}"
                name="spectrum_type"
-               autocomplete="off" {% if choice[0]== 1 %} checked {% endif %}>
+               autocomplete="off" {% if choice[0]== form.spectrum_type.data %} checked {% endif %}>
         <label class="btn btn-sm btn-outline-success my-1" for="type_radio_{{choice[0]}}">{{choice[1]}}</label>
         {% endfor %}
     </div>
     <div class="row">
         <div class="col-6">
-            <div id="preprocessing_steps" class="mb-3" style="display: none">
+            <div id="preprocessing_steps"
+                 class="mb-3 {%if form.spectrum_type.data == 2 %}d-block{% else %}d-none{%endif%}">
                 <label class="form-label">Vorverarbeitungsschritte (Auswahl)</label>
                 <div>
                     {% for choice in form.preprocessing_steps.choices %}
                     <input type="checkbox" class="btn-check my-1" id="step_check_{{choice[0]}}" name="step_check"
                            value="{{choice[0]}}"
-                           autocomplete="off">
+                           autocomplete="off" {% if choice[0] in form.preprocessing_steps.data %} checked {% endif %}>
                     <label class="btn btn-sm btn-outline-success my-1"
                            for="step_check_{{choice[0]}}">{{choice[1]}}</label>
                     {% endfor %}
 
                 </div>
             </div>
-            <div class="mb-3">
+            <div class="form-check form-switch my-3">
+                {{form.new_spectrum(class="form-check-input", id="newSpectrumSwitch")}}
+                {{form.new_spectrum.label(class="form-check-label", for="newSpectrumSwitch")}}
+            </div>
+            <div id="file" class="mb-3" style="display: none">
                 <label for="spectrum" class="form-label">Spektrum</label>
                 <input class="form-control" type="file" id="spectrum" name="spectrum">
             </div>
@@ -50,7 +55,7 @@
 
         </div>
     </div>
-    <button type="submit" class="btn btn-primary my-2">Spektrum hinzufügen</button>
+    <button type="submit" class="btn btn-primary my-2">Spektrum speichern</button>
 
 </form>
 
@@ -63,16 +68,31 @@
         options.forEach(function (option) {
             option.addEventListener("change", function () {
                 if (option.checked && option.value === "1") {
-                    contentToHide.style.display = "none";
+                    contentToHide.classList.remove("d-block");
+                    contentToHide.classList.add("d-none");
                 } else if (option.checked && option.value === "2") {
                     console.log("display")
 
-                    contentToHide.style.display = "block";
-                }
-                else if (option.checked && option.value === "3") {
-                    contentToHide.style.display = "none";
+                    contentToHide.classList.add("d-block");
+                    contentToHide.classList.remove("d-none");
+                } else if (option.checked && option.value === "3") {
+                    contentToHide.classList.remove("d-block");
+                    contentToHide.classList.add("d-none");
                 }
             });
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const newSpectrumSwitch = document.getElementById("newSpectrumSwitch");
+        const contentToHide = document.getElementById("file");
+
+        newSpectrumSwitch.addEventListener("change", function () {
+            if (newSpectrumSwitch.checked) {
+                contentToHide.style.display = "block";
+            } else {
+                contentToHide.style.display = "none";
+            }
         });
     });
 

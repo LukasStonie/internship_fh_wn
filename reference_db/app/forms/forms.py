@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField
+from flask_wtf.file import FileField, FileRequired
 from wtforms import (StringField, TextAreaField, IntegerField, BooleanField,
-                     RadioField, PasswordField, SelectField)
+                     RadioField, PasswordField, SelectField, SelectMultipleField, SubmitField)
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import InputRequired, Length, Email, EqualTo
 
@@ -74,7 +74,7 @@ class CompoundsForm(FlaskForm):
                                validators=[InputRequired(message='Bitte geben Sie eine Laserleistung an')])
     description = StringField('Beschreibung', validators=[])
 
-    lenses = SelectField('Objektiv', validate_choice=False, choices=[('penis', 'Male'), ('vag', 'Female')], default='vag',
+    lenses = SelectField('Objektiv', validate_choice=False,
                          validators=[InputRequired(message='Bitte wählen Sie ein Objektiv aus')])
     lasers = SelectField('Laser', validate_choice=False,
                          validators=[InputRequired(message='Bitte wählen Sie einen Laser aus')])
@@ -87,3 +87,19 @@ class CompoundsForm(FlaskForm):
     resolutions = SelectField('Auflösung', validate_choice=False,
                               validators=[InputRequired(message='Bitte wählen Sie eine Auflösung aus')])
     substrates = SelectField('Substrat', validate_choice=False, validators=[])
+
+    create = SubmitField('Erstellen')
+    create_and_add = SubmitField('Erstellen und Spektrum hinzufügen')
+
+
+class SpectraForm(FlaskForm):
+    spectrum_type = RadioField('Spektrumart', validate_choice=False,
+                               validators=[InputRequired(message='Bitte wählen Sie einen Spektrumtyp aus')])
+    preprocessing_steps = SelectMultipleField('Vorverarbeitung', validate_choice=False, validators=[])
+
+
+class SpectraEditForm(FlaskForm):
+    spectrum_type = RadioField('Spektrumart', validate_choice=False,
+                               validators=[InputRequired(message='Bitte wählen Sie einen Spektrumtyp aus')])
+    preprocessing_steps = SelectMultipleField('Vorverarbeitung', validate_choice=False, validators=[])
+    new_spectrum = BooleanField('Spektrum austauschen')

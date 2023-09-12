@@ -1,5 +1,5 @@
 from sqlalchemy import Table, Column, Integer, BLOB, String, ForeignKey, UniqueConstraint, BOOLEAN
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import declarative_base, relationship, backref
 from flask_login import UserMixin
 
 import app
@@ -22,7 +22,7 @@ class User(UserMixin, Base):
     )
 
     def __repr__(self):
-        return f'<User "{self.username}">'
+        return f'<User "{self.first_name}" "{self.last_name}" "{self.email}" "{self.active}">'
 
 
 class Group(Base):
@@ -151,7 +151,9 @@ class Spectrum(Base):
     file_path = Column(String(200), nullable=False)
     compound_id = Column(Integer, ForeignKey('compounds.id'))
     spectrum_type_id = Column(Integer, ForeignKey('spectrum_types.id'))
-    preprocessing_steps = relationship("PreprocessingSteps", secondary=spectrum_has_preprocessing_steps)
+    preprocessing_steps = relationship("PreprocessingSteps",
+                                       secondary=spectrum_has_preprocessing_steps,
+                                       back_populates="spectra")
 
     __table_args__ = (
         UniqueConstraint('file_path', name='u_file_path'),
@@ -180,6 +182,9 @@ class PreprocessingSteps(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(200), nullable=False)
+    spectra = relationship("Spectrum",
+                           secondary=spectrum_has_preprocessing_steps,
+                           back_populates="preprocessing_steps")
 
     __table_args__ = (
         UniqueConstraint('name', name='u_name'),
@@ -207,6 +212,8 @@ class Compound(Base):
     user = Column(String(200), nullable=False)
     description = Column(String(400), nullable=True)
     date = Column(String(15), nullable=False)
+
+    spectra = relationship("Spectrum", backref="compound", cascade="all, delete")
 
     def __repr__(self):
         return f'<Compound "{self.name}">'
