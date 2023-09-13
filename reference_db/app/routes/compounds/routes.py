@@ -63,7 +63,7 @@ def new_post():
             elif form.create_and_add.data:
                 return redirect(url_for('spectra.new', compound_id=compound.id))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Bezeichnung existiert bereits', 'error')
+            flash('Diese Bezeichnung existiert bereits', 'danger')
             return render_template('resources/compounds/new.html', form=form)
 
 
@@ -128,7 +128,7 @@ def edit_post(compound_id):
             db.session.commit()
             return redirect(url_for('compounds.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Bezeichnung existiert bereits', 'error')
+            flash('Diese Bezeichnung existiert bereits', 'danger')
             return render_template('resources/compounds/edit.html', form=form)
 
 

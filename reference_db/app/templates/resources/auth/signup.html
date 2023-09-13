@@ -6,15 +6,7 @@
     <div class="row h-100">
 
         <div class="col-md-6 d-flex mx-auto flex-column">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-            <div class="row">
-                {% for category, message in messages %}
-                <div class="alert alert-{{category}} my-2" role="alert">
-                    {{ message }}
-                </div>
-                {% endfor %}
-            </div>
-            {% endwith %}
+            {% include 'includes/errors.html' %}
             <div class="row">
                 <div class="col-12 d-flex align-items-center justify-content-start">
                     <h1>Account erstellen</h1>
@@ -22,23 +14,49 @@
             </div>
 
 
-            <form method="POST" class="g-3 mb-5">
+            <form method="POST" class="g-3 mb-5" novalidate>
                 {{ form.csrf_token }}
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         {{form.firstname.label(class="form-label")}}
                         {{form.firstname(class="form-control", placeholder="Max")}}
+                        {% if form.firstname.errors %}
+                        <div class="alert alert-danger my-3" role="alert">
+                            {% for error in form.firstname.errors %}
+                            <p class="mb-0">
+                                {{ error }}
+                            </p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
 
                     </div>
                     <div class="col-md-6 mb-3">
                         {{form.lastname.label(class="form-label")}}
                         {{form.lastname(class="form-control", placeholder="Mustermann")}}
-
+                        {% if form.lastname.errors %}
+                        <div class="alert alert-danger my-3" role="alert">
+                            {% for error in form.lastname.errors %}
+                            <p class="mb-0">
+                                {{ error }}
+                            </p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
 
                     <div class="mb-3">
                         {{form.email.label(class="form-label")}}
                         {{form.email(class="form-control", placeholder="user@domain.at")}}
+                        {% if form.email.errors %}
+                        <div class="alert alert-danger my-3" role="alert">
+                            {% for error in form.email.errors %}
+                            <p class="mb-0">
+                                {{ error }}
+                            </p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="mb-3">
                         {{form.password.label(class="form-label")}}

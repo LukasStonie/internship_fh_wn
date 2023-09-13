@@ -47,7 +47,7 @@ def new_post():
             db.session.commit()
             return redirect(url_for('substrates.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Bezeichnung existiert bereits', 'error')
+            flash('Diese Bezeichnung existiert bereits', 'danger')
             return render_template('resources/substrates/new.html', form=form)
 
 
@@ -81,7 +81,7 @@ def edit_post(substrate_id):
             db.session.commit()
             return redirect(url_for('substrates.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Bezeichnung existiert bereits', 'error')
+            flash('Diese Bezeichnung existiert bereits', 'danger')
             return render_template('resources/substrates/edit.html', form=form)
 
 

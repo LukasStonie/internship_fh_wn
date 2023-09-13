@@ -41,7 +41,7 @@ def new_post():
             return redirect(url_for('lenses.index'))
 
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Kombination aus Zoom und numerischer Apertur existiert bereits', 'error')
+            flash('Diese Kombination aus Zoom und numerischer Apertur existiert bereits', 'danger')
             return render_template('resources/lenses/new.html', form=form)
 
 
@@ -72,7 +72,7 @@ def edit_post(lens_id):
             db.session.commit()
             return redirect(url_for('lenses.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Kombination aus Zoom und numerischer Apertur existiert bereits', 'error')
+            flash('Diese Kombination aus Zoom und numerischer Apertur existiert bereits', 'danger')
             render_template('resources/lenses/edit.html', form=form)
 
 

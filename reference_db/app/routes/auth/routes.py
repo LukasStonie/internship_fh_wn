@@ -55,6 +55,9 @@ def login_post():
     # check if the user exists
     user = db.session.query(User).filter_by(email=form.email.data).first()
 
+    if not form.validate():
+        return render_template('resources/auth/login.html', form=form)
+
     # check if the user is allowed to login
     if user and user.active == False:
         flash('Ihr Account wurde noch nicht freigeschaltet. Wenden Sie sich an einen Administrator.', 'danger')

@@ -10,11 +10,7 @@
         Zurück
     </a>
     <h1>Erstellen <b><em>Spektralbereich</em></b></h1>
-    {% for mesg in get_flashed_messages() %}
-    <div class="alert alert-danger my-2" role="alert">
-        {{ mesg }}
-    </div>
-    {% endfor %}
+    {% include 'includes/errors.html' %}
     <form method="POST" novalidate>
         {{ form.csrf_token}}
         <div class="mb-3">

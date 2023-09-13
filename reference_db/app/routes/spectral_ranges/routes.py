@@ -39,7 +39,7 @@ def new_post():
             db.session.commit()
             return redirect(url_for('spectral_ranges.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Kombination aus Start und Ende existiert bereits', 'error')
+            flash('Diese Kombination aus Start und Ende existiert bereits', 'danger')
             return render_template('resources/spectral_ranges/new.html', form=form)
 
 
@@ -69,7 +69,7 @@ def edit_post(spectral_range_id):
             db.session.commit()
             return redirect(url_for('spectral_ranges.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Kombination aus Start und Ende existiert bereits', 'error')
+            flash('Diese Kombination aus Start und Ende existiert bereits', 'danger')
             return render_template('resources/spectral_ranges/edit.html', form=form)
 
 

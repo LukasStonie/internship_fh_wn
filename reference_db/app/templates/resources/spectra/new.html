@@ -10,14 +10,7 @@
         Zurück
     </a>
     <h1 class="mb-3">Spektrum hinzufügen</h1>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% for cat, mesg in messages %}
-    <div class="alert alert-{{cat}} my-2" role="alert">
-        {{ mesg }}
-    </div>
-    {% endfor %}
-    {% endwith %}
-
+    {% include 'includes/errors.html' %}
     <form method="POST" enctype="multipart/form-data" novalidate>
         {{ form.csrf_token }}
         <h5>Welche Art von Spektrum möchten Sie hinzufügen?</h5>

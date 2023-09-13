@@ -39,7 +39,7 @@ def new_post():
             db.session.commit()
             return redirect(url_for('resolutions.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Bezeichnung existiert bereits', 'error')
+            flash('Diese Bezeichnung existiert bereits', 'danger')
             return render_template('resources/resolutions/new.html', form=form)
 
 
@@ -68,7 +68,7 @@ def edit_post(resolution_id):
             db.session.commit()
             return redirect(url_for('resolutions.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Bezeichnung existiert bereits', 'error')
+            flash('Diese Bezeichnung existiert bereits', 'danger')
             return render_template('resources/resolutions/edit.html', form=form)
 
 

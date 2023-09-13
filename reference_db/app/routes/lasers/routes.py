@@ -39,7 +39,7 @@ def new_post():
             db.session.commit()
             return redirect(url_for('lasers.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Wellenlänge existiert bereits', 'error')
+            flash('Diese Wellenlänge existiert bereits', 'danger')
             return render_template('resources/lasers/new.html', form=form)
 
 
@@ -68,7 +68,7 @@ def edit_post(laser_id):
             db.session.commit()
             return redirect(url_for('lasers.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Wellenlänge existiert bereits', 'error')
+            flash('Diese Wellenlänge existiert bereits', 'danger')
             return render_template('resources/lasers/edit', form=form)
 
 

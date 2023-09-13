@@ -117,14 +117,11 @@ def new_post(compound_id):
         return redirect(url_for('compounds.show', compound_id=compound_id))
     except sqlalchemy.exc.IntegrityError as e:
         print(e)
-        flash('Spektrum konnte nicht hinzugefügt werden, da diese Konfiguration für die Substanz schon existiert',
-              'danger')
+        flash('Spektrum konnte nicht hinzugefügt werden, da diese Konfiguration für die Substanz schon existiert','danger')
         return render_template('resources/spectra/new.html', form=form, compound_id=compound_id)
     except Exception as e:
         print(e)
-        flash(
-            'Datei konnte nicht gelesen werden. Bitte überprüfen Sie die Datei und konverterieren Sie sie gegebenenfalls in das CSV Format',
-            'danger')
+        flash('Datei konnte nicht gelesen werden. Bitte überprüfen Sie die Datei und konverterieren Sie sie gegebenenfalls in das CSV Format','danger')
         return render_template('resources/spectra/new.html', form=form, compound_id=compound_id)
 
 
@@ -197,13 +194,10 @@ def edit_post(spectrum_id):
         db.session.commit()
         return redirect(url_for('compounds.show', compound_id=spectrum.compound_id))
     except sqlalchemy.exc.IntegrityError as e:
-        flash('Spektrum konnte nicht hinzugefügt werden, da diese Konfiguration für die Substanz schon existiert',
-              'danger')
+        flash('Spektrum konnte nicht hinzugefügt werden, da diese Konfiguration für die Substanz schon existiert','danger')
         return render_template('resources/spectra/edit.html', form=form, compound_id=spectrum.compound_id)
     except Exception as e:
-        flash(
-            'Datei konnte nicht gelesen werden. Bitte überprüfen Sie die Datei und konverterieren Sie sie gegebenenfalls in das CSV Format',
-            'danger')
+        flash('Datei konnte nicht gelesen werden. Bitte überprüfen Sie die Datei und konverterieren Sie sie gegebenenfalls in das CSV Format','danger')
         return render_template('resources/spectra/edit.html', form=form, compound_id=spectrum.compound_id)
 
 

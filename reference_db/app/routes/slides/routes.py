@@ -39,7 +39,7 @@ def new_post():
             db.session.commit()
             return redirect(url_for('slides.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Bezeichnung existiert bereits', 'error')
+            flash('Diese Bezeichnung existiert bereits', 'danger')
             return render_template('resources/slides/new.html', form=form)
 
 
@@ -68,7 +68,7 @@ def edit_post(slide_id):
             db.session.commit()
             return redirect(url_for('slides.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Bezeichnung existiert bereits', 'error')
+            flash('Diese Bezeichnung existiert bereits', 'danger')
             return render_template('resources/slides/edit.html', form=form)
 
 

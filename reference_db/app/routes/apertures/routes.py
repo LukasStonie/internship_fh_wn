@@ -39,7 +39,7 @@ def new_post():
             db.session.commit()
             return redirect(url_for('apertures.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Größe existiert bereits', 'error')
+            flash('Diese Größe existiert bereits', 'danger')
             return render_template('resources/apertures/new.html', form=form)
 
 
@@ -69,7 +69,7 @@ def edit_post(aperture_id):
             db.session.commit()
             return redirect(url_for('apertures.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Größe existiert bereits', 'error')
+            flash('Diese Größe existiert bereits', 'danger')
             return render_template('resources/apertures/edit.html', form=form)
 
 

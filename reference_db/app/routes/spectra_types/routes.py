@@ -39,7 +39,7 @@ def new_post():
             db.session.commit()
             return redirect(url_for('spectra_types.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Bezeichnung existiert bereits', 'error')
+            flash('Diese Bezeichnung existiert bereits', 'danger')
             return render_template('resources/spectra_types/new.html', form=form)
 
 
@@ -69,7 +69,7 @@ def edit_post(spectrum_type_id):
             db.session.commit()
             return redirect(url_for('spectra_types.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Bezeichnung existiert bereits', 'error')
+            flash('Diese Bezeichnung existiert bereits', 'danger')
             return render_template('resources/spectra_types/edit.html', form=form)
 
 

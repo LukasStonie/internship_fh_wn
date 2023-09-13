@@ -39,7 +39,7 @@ def new_post():
             db.session.commit()
             return redirect(url_for('preprocessing_steps.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Bezeichnung existiert bereits', 'error')
+            flash('Diese Bezeichnung existiert bereits', 'danger')
             return render_template('resources/preprocessing_steps/new.html', form=form)
 
 
@@ -69,7 +69,7 @@ def edit_post(preprocessing_step_id):
             db.session.commit()
             return redirect(url_for('preprocessing_steps.index'))
         except sqlalchemy.exc.IntegrityError:
-            flash('Diese Bezeichnung existiert bereits', 'error')
+            flash('Diese Bezeichnung existiert bereits', 'danger')
             return render_template('resources/preprocessing_steps/edit.html', form=form)
 
 
