@@ -1,54 +1,58 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% include 'includes/backToStart.html' %}
-<div class="row">
-    <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-        <h1>Übersicht <b><em>Referenzsubstanzen</em></b></h1>
-    </div>
-    <div class="col-12 col-md-6 d-flex align-items-center justify-content-start justify-content-md-end">
-        <a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('compounds.new') }}"><i
-                class="bi bi-plus-lg"></i>
-            Neue Substanz erstellen
-        </a>
-    </div>
-</div>
-{% if compounds|length<=0 %}
-<h4>Es sind noch keine Substanzen hinterlegt</h4>
-{% else %}
+<div class="container mt-3 content">
 
-<table class="table table-fixed">
-    <thead>
-    <tr>
-        <th scope="col">Bezeichnung</th>
-        <th>Erstellt am</th>
-        <th>Beschreibung</th>
-        <th>Aktionen</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for compound in compounds %}
-    <a href="{{ url_for('compounds.show', compound_id=compound.id) }}">
+    {% include 'includes/backToStart.html' %}
+    <div class="row">
+        <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+            <h1>Übersicht <b><em>Referenzsubstanzen</em></b></h1>
+        </div>
+        <div class="col-12 col-md-6 d-flex align-items-center justify-content-start justify-content-md-end">
+            <a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('compounds.new') }}"><i
+                    class="bi bi-plus-lg"></i>
+                Neue Substanz erstellen
+            </a>
+        </div>
+    </div>
+    {% if compounds|length<=0 %}
+    <h4>Es sind noch keine Substanzen hinterlegt</h4>
+    {% else %}
 
+    <table class="table table-fixed">
+        <thead>
         <tr>
-            <td>{{ compound.name }}</td>
-            <td>{{ compound.date }}</td>
-            <td>{{ compound.description if compound.description else 'keine' }}</td>
-            <td>
-                <a type="button" class="btn btn-outline-dark btn-sm"
-                   href="{{ url_for('compounds.show', compound_id=compound.id) }}"><i class="bi bi-eye-fill"></i>
-                    Details</a>
-                <a type="button" class="btn btn-outline-primary btn-sm"
-                   href="{{ url_for('compounds.edit', compound_id=compound.id) }}"><i class="bi bi-pencil-fill"></i>
-                    Bearbeiten</a>
-                <a type="button" class="btn btn-outline-danger btn-sm"
-                   href="{{ url_for('compounds.delete', compound_id=compound.id) }}"><i class="bi bi-trash-fill"></i>
-                    Löschen</a>
-            </td>
+            <th scope="col">Bezeichnung</th>
+            <th>Erstellt am</th>
+            <th>Beschreibung</th>
+            <th>Aktionen</th>
         </tr>
-    </a>
+        </thead>
+        <tbody>
+        {% for compound in compounds %}
+        <a href="{{ url_for('compounds.show', compound_id=compound.id) }}">
 
-    {% endfor %}
-</table>
-{% endif %}
+            <tr>
+                <td>{{ compound.name }}</td>
+                <td>{{ compound.date }}</td>
+                <td>{{ compound.description if compound.description else 'keine' }}</td>
+                <td>
+                    <a type="button" class="btn btn-outline-dark btn-sm"
+                       href="{{ url_for('compounds.show', compound_id=compound.id) }}"><i class="bi bi-eye-fill"></i>
+                        Details</a>
+                    <a type="button" class="btn btn-outline-primary btn-sm"
+                       href="{{ url_for('compounds.edit', compound_id=compound.id) }}"><i class="bi bi-pencil-fill"></i>
+                        Bearbeiten</a>
+                    <a type="button" class="btn btn-outline-danger btn-sm"
+                       href="{{ url_for('compounds.delete', compound_id=compound.id) }}"><i
+                            class="bi bi-trash-fill"></i>
+                        Löschen</a>
+                </td>
+            </tr>
+        </a>
+
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
 {% endblock %}

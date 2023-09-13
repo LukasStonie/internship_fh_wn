@@ -1,175 +1,180 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container mt-3 content">
 
-<a class="icon-link icon-link-hover mb-2"
-   style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
-   href="{{ url_for('compounds.index') }}">
-    <i class="bi bi-arrow-left mb-auto"></i>
-    Zurück
-</a>
-<h1>Details <b><em>{{compound.name}}</em></b></h1>
-<p><span class="badge text-bg-dark">erstellt am {{compound.date}} von {{compound.user}}</span></p>
-
-<div class="row">
-    <div class="col-md-6">
-        <table class="table table-fixed">
-            <tbody>
-            <tr>
-                <th>Koaddition</th>
-                <td>{{compound.coaddition}}</td>
-            </tr>
-            <tr>
-                <th>Integrationszeit [ms]</th>
-                <td>{{compound.integration_time}}</td>
-            </tr>
-            <tr>
-                <th>Laserleistung [mW]</th>
-                <td>{{compound.laser_power}}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="col-md-6">
-        <table class="table table-fixed">
-            <tbody>
-            <tr>
-                <th>Objektiv</th>
-                <td>{{lookup.lens.zoom}}x, {{lookup.lens.numerical_aperture}}</td>
-            </tr>
-            <tr>
-                <th>Laser [nm]</th>
-                <td>{{lookup.laser.wavelength}}</td>
-            </tr>
-            <tr>
-                <th>Apertur [µm]</th>
-                <td>{{lookup.aperture.size}}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="row">
-
-    <div class="col-md-6">
-        <table class="table table-fixed">
-            <tbody>
-            <tr>
-                <th>Spektralbereich [cm<sup>-1</sup>]</th>
-                <td>{{lookup.spectral_range.start}} - {{lookup.spectral_range.end}}</td>
-            </tr>
-            <tr>
-                <th>Auflösung</th>
-                <td>{{lookup.resolution.description}}</td>
-            </tr>
-            <tr>
-                <th>Objektträger</th>
-                <td>{{lookup.slide.name}}</td>
-            </tr>
-            <tr>
-                <th>Substrat</th>
-                <td>{{lookup.substrate.name if lookup.substrate != None else 'Keines'}}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="col-md-6">
-        <label for="description" class="form-label"><b>Beschreibung</b></label>
-        <textarea readonly class="form-control" id="description" name="description" rows="3"
-                  placeholder="Beschreibung">{{compound.description}}</textarea>
-    </div>
-</div>
-<hr>
-
-{% if spectra|length<=0 %}
-<div class="d-flex justify-content-center align-items-center flex-column">
-    <h4 class="">Es sind noch keine Spektren für diese Substanz hinterlegt</h4>
-    <a type="button" class="btn btn-outline-success btn" href="{{ url_for('spectra.new', compound_id=compound.id) }}"><i
-            class="bi bi-plus-lg"></i>
-        Spektren hinzufügen
+    <a class="icon-link icon-link-hover mb-2"
+       style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+       href="{{ url_for('compounds.index') }}">
+        <i class="bi bi-arrow-left mb-auto"></i>
+        Zurück
     </a>
-</div>
-{% else %}
-<div class="row">
-    <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-        <h4 class="mb-3">Hinterlegte Spektren</h4>
-    </div>
-    <div class="col-12 col-md-6 d-flex align-items-center justify-content-start justify-content-md-end">
-        <div class="btn-group dropdown-center">
-            <a type="button" class="btn btn-outline-success btn-sm"
-               href="{{ url_for('spectra.new', compound_id=compound.id) }}"><i
-                    class="bi bi-plus-lg"></i>
-                Spektrum hinzufügen
-            </a>
-            <a type="button" class="btn btn-outline-success btn-sm dropdown-toggle dropdown-toggle-split"
-               data-bs-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">
-            </a>
-            <ul class="dropdown-menu">
-                <li>
-                    <a class="btn btn-outline-success dropdown-item" type="button"
-                       href="{{url_for('spectra.peaks', compound_id=compound.id)}}">Peaks erstellen</a>
-                </li>
-            </ul>
+    <h1>Details <b><em>{{compound.name}}</em></b></h1>
+    <p><span class="badge text-bg-dark">erstellt am {{compound.date}} von {{compound.user}}</span></p>
+
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table table-fixed">
+                <tbody>
+                <tr>
+                    <th>Koaddition</th>
+                    <td>{{compound.coaddition}}</td>
+                </tr>
+                <tr>
+                    <th>Integrationszeit [ms]</th>
+                    <td>{{compound.integration_time}}</td>
+                </tr>
+                <tr>
+                    <th>Laserleistung [mW]</th>
+                    <td>{{compound.laser_power}}</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-
+        <div class="col-md-6">
+            <table class="table table-fixed">
+                <tbody>
+                <tr>
+                    <th>Objektiv</th>
+                    <td>{{lookup.lens.zoom}}x, {{lookup.lens.numerical_aperture}}</td>
+                </tr>
+                <tr>
+                    <th>Laser [nm]</th>
+                    <td>{{lookup.laser.wavelength}}</td>
+                </tr>
+                <tr>
+                    <th>Apertur [µm]</th>
+                    <td>{{lookup.aperture.size}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-{% for spectrum in spectra %}
-<div class="row">
-    <div class="col-md-8 d-flex align-items-center">
-        <div class="row">
-            <div class="col-6">
-                <table class="table table-fixed">
-                    <tbody>
-                    <tr>
-                        <th>Spektrumart</th>
-                        {% for spectrum_type in lookup.spectra_type %}
-                        {% if spectrum_type.id == spectrum.spectrum_type_id %}
-                        <td>{{ spectrum_type.name }}</td>
-                        {% endif %}
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <th>Spektrum</th>
-                        <td><a class="icon-link icon-link-hover link-success"
-                               href="{{url_for('spectra.download', spectrum_id=spectrum.id)}}"><i
-                                class="bi bi-download mb-2"
-                                style="--bs-icon-link-transform: translate3d(0, .125rem, 0)">
-                        </i> Download</a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="row g-3">
-                    <div class="col">
-                        <a class="btn btn-outline-primary btn-sm"
-                           href="{{url_for('spectra.edit', spectrum_id=spectrum.id)}}"><i class="bi bi-pencil-fill"></i> Bearbeiten</a>
-                        <a class="btn btn-outline-danger btn-sm"
-                           href="{{url_for('spectra.delete', spectrum_id=spectrum.id)}}"><i class="bi bi-trash-fill"></i> Löschen</a>
-                    </div>
+    <div class="row">
 
+        <div class="col-md-6">
+            <table class="table table-fixed">
+                <tbody>
+                <tr>
+                    <th>Spektralbereich [cm<sup>-1</sup>]</th>
+                    <td>{{lookup.spectral_range.start}} - {{lookup.spectral_range.end}}</td>
+                </tr>
+                <tr>
+                    <th>Auflösung</th>
+                    <td>{{lookup.resolution.description}}</td>
+                </tr>
+                <tr>
+                    <th>Objektträger</th>
+                    <td>{{lookup.slide.name}}</td>
+                </tr>
+                <tr>
+                    <th>Substrat</th>
+                    <td>{{lookup.substrate.name if lookup.substrate != None else 'Keines'}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <label for="description" class="form-label"><b>Beschreibung</b></label>
+            <textarea readonly class="form-control" id="description" name="description" rows="3"
+                      placeholder="Beschreibung">{{compound.description}}</textarea>
+        </div>
+    </div>
+    <hr>
+
+    {% if spectra|length<=0 %}
+    <div class="d-flex justify-content-center align-items-center flex-column">
+        <h4 class="">Es sind noch keine Spektren für diese Substanz hinterlegt</h4>
+        <a type="button" class="btn btn-outline-success btn"
+           href="{{ url_for('spectra.new', compound_id=compound.id) }}"><i
+                class="bi bi-plus-lg"></i>
+            Spektren hinzufügen
+        </a>
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+            <h4 class="mb-3">Hinterlegte Spektren</h4>
+        </div>
+        <div class="col-12 col-md-6 d-flex align-items-center justify-content-start justify-content-md-end">
+            <div class="btn-group dropdown-center">
+                <a type="button" class="btn btn-outline-success btn-sm"
+                   href="{{ url_for('spectra.new', compound_id=compound.id) }}"><i
+                        class="bi bi-plus-lg"></i>
+                    Spektrum hinzufügen
+                </a>
+                <a type="button" class="btn btn-outline-success btn-sm dropdown-toggle dropdown-toggle-split"
+                   data-bs-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="btn btn-outline-success dropdown-item" type="button"
+                           href="{{url_for('spectra.peaks', compound_id=compound.id)}}">Peaks erstellen</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    {% for spectrum in spectra %}
+    <div class="row">
+        <div class="col-md-8 d-flex align-items-center">
+            <div class="row">
+                <div class="col-6">
+                    <table class="table table-fixed">
+                        <tbody>
+                        <tr>
+                            <th>Spektrumart</th>
+                            {% for spectrum_type in lookup.spectra_type %}
+                            {% if spectrum_type.id == spectrum.spectrum_type_id %}
+                            <td>{{ spectrum_type.name }}</td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>Spektrum</th>
+                            <td><a class="icon-link icon-link-hover link-success"
+                                   href="{{url_for('spectra.download', spectrum_id=spectrum.id)}}"><i
+                                    class="bi bi-download mb-2"
+                                    style="--bs-icon-link-transform: translate3d(0, .125rem, 0)">
+                            </i> Download</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="row g-3">
+                        <div class="col">
+                            <a class="btn btn-outline-primary btn-sm"
+                               href="{{url_for('spectra.edit', spectrum_id=spectrum.id)}}"><i
+                                    class="bi bi-pencil-fill"></i> Bearbeiten</a>
+                            <a class="btn btn-outline-danger btn-sm"
+                               href="{{url_for('spectra.delete', spectrum_id=spectrum.id)}}"><i
+                                    class="bi bi-trash-fill"></i> Löschen</a>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-6">
+                    <h6>Vorverarbeitung</h6>
+                    {% if spectrum.preprocessing_steps|length>0 %}
+                    {% for step in spectrum.preprocessing_steps %}
+                    <h6><span class="badge text-bg-success">{{step.name}}</span></h6>
+                    {% endfor %}
+                    {% else %}
+                    <p>Keine</p>
+                    {% endif %}
                 </div>
             </div>
-            <div class="col-6">
-                <h6>Vorverarbeitung</h6>
-                {% if spectrum.preprocessing_steps|length>0 %}
-                {% for step in spectrum.preprocessing_steps %}
-                <h6><span class="badge text-bg-success">{{step.name}}</span></h6>
-                {% endfor %}
-                {% else %}
-                <p>Keine</p>
-                {% endif %}
-            </div>
+
         </div>
+        <div class="col-md-4">
+            <img src="data:image/png;base64,{{plots[spectrum.id]}}" width="100%">
+        </div>
+    </div>
+    <hr>
+    {% endfor %}
 
-    </div>
-    <div class="col-md-4">
-        <img src="data:image/png;base64,{{plots[spectrum.id]}}" width="100%">
-    </div>
+    {% endif %}
 </div>
-<hr>
-{% endfor %}
-
-{% endif %}
 {% endblock %}

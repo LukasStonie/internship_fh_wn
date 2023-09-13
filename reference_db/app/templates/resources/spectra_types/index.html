@@ -1,44 +1,46 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% include 'includes/backToStart.html' %}
+<div class="container mt-3 content">
+    {% include 'includes/backToStart.html' %}
 
-<div class="row">
-    <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-        <h1>Übersicht <b><em>Spektrenarten</em></b></h1>
+    <div class="row">
+        <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+            <h1>Übersicht <b><em>Spektrenarten</em></b></h1>
+        </div>
+        <div class="col-12 col-md-6 d-flex align-items-center justify-content-start justify-content-md-end">
+            <a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('spectra_types.new') }}"><i
+                    class="bi bi-plus-lg"></i>
+                Neue Spektrenart erstellen
+            </a>
+        </div>
     </div>
-    <div class="col-12 col-md-6 d-flex align-items-center justify-content-start justify-content-md-end">
-        <a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('spectra_types.new') }}"><i
-                class="bi bi-plus-lg"></i>
-            Neue Spektrenart erstellen
-        </a>
-    </div>
+    {% if spectra_types|length<=0 %}
+    <h4>Es sind noch keine Spektrenarten hinterlegt</h4>
+    {% else %}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Bezeichnung</th>
+            <th>Aktionen</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for spectra_type in spectra_types %}
+        <tr>
+            <td>{{ spectra_type.name }}</td>
+            <td>
+                <a type="button" class="btn btn-outline-primary btn-sm"
+                   href="{{ url_for('spectra_types.edit', spectrum_type_id=spectra_type.id) }}"><i
+                        class="bi bi-pencil-fill"></i> Bearbeiten</a>
+                <a type="button" class="btn btn-outline-danger btn-sm"
+                   href="{{ url_for('spectra_types.delete', spectrum_type_id=spectra_type.id) }}"><i
+                        class="bi bi-trash-fill"></i> Löschen</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
 </div>
-{% if spectra_types|length<=0 %}
-<h4>Es sind noch keine Spektrenarten hinterlegt</h4>
-{% else %}
-
-<table class="table">
-    <thead>
-    <tr>
-        <th scope="col">Bezeichnung</th>
-        <th>Aktionen</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for spectra_type in spectra_types %}
-    <tr>
-        <td>{{ spectra_type.name }}</td>
-        <td>
-            <a type="button" class="btn btn-outline-primary btn-sm"
-               href="{{ url_for('spectra_types.edit', spectrum_type_id=spectra_type.id) }}"><i
-                    class="bi bi-pencil-fill"></i> Bearbeiten</a>
-            <a type="button" class="btn btn-outline-danger btn-sm"
-               href="{{ url_for('spectra_types.delete', spectrum_type_id=spectra_type.id) }}"><i
-                    class="bi bi-trash-fill"></i> Löschen</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-{% endif %}
 {% endblock %}

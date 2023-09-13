@@ -1,34 +1,37 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<a class="icon-link icon-link-hover mb-2"
-   style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
-   href="{{ url_for('apertures.index') }}">
-    <i class="bi bi-arrow-left mb-auto"></i>
-    Zurück
-</a>
-<h1>Bearbeiten <b><em>Apertur</em></b></h1>
-{% for mesg in get_flashed_messages() %}
-<div class="alert alert-danger my-2" role="alert">
-    {{ mesg }}
-</div>
-{% endfor %}
-<form method="POST">
-    {{ form.csrf_token}}
-    <div class="mb-3">
-        {{form.size.label(class="form-label")}}
-        {{form.size(class="form-control")}}
-        {% if form.size.errors %}
-        <div class="alert alert-danger my-3" role="alert">
-            {% for error in form.size.errors %}
-            <p class="mb-0">
-                {{ error }}
-            </p>
-            {% endfor %}
-        </div>
-        {% endif %}
-    </div>
+<div class="container mt-3 content">
 
-    <button type="submit" class="btn btn-primary">Speichern</button>
-</form>
+    <a class="icon-link icon-link-hover mb-2"
+       style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+       href="{{ url_for('apertures.index') }}">
+        <i class="bi bi-arrow-left mb-auto"></i>
+        Zurück
+    </a>
+    <h1>Bearbeiten <b><em>Apertur</em></b></h1>
+    {% for mesg in get_flashed_messages() %}
+    <div class="alert alert-danger my-2" role="alert">
+        {{ mesg }}
+    </div>
+    {% endfor %}
+    <form method="POST">
+        {{ form.csrf_token}}
+        <div class="mb-3">
+            {{form.size.label(class="form-label")}}
+            {{form.size(class="form-control")}}
+            {% if form.size.errors %}
+            <div class="alert alert-danger my-3" role="alert">
+                {% for error in form.size.errors %}
+                <p class="mb-0">
+                    {{ error }}
+                </p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Speichern</button>
+    </form>
+</div>
 {% endblock %}

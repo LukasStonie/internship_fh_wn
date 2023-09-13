@@ -1,49 +1,51 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<a class="icon-link icon-link-hover mb-2"
-   style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
-   href="{{ url_for('spectral_ranges.index') }}">
-    <i class="bi bi-arrow-left mb-auto"></i>
-    Zurück
-</a>
-<h1>Bearbeiten <b><em>Spektralbereich</em></b></h1>
-{% for mesg in get_flashed_messages() %}
-<div class="alert alert-danger my-2" role="alert">
-    {{ mesg }}
-</div>
-{% endfor %}
-<form method="POST" novalidate>
-    {{ form.csrf_token}}
-    <div class="mb-3">
-        <!--do custom label due to superscript-->
-        <label for="{{form.start.id}}" class="form-label">Start [cm<sup>-1</sup>]</label>
-        {{form.start(class="form-control", placeholder="20")}}
-        {% if form.start.errors %}
-        <div class="alert alert-danger my-3" role="alert">
-            {% for error in form.start.errors %}
-            <p class="mb-0">
-                {{ error }}
-            </p>
-            {% endfor %}
-        </div>
-        {% endif %}
-    </div>
-    <div class="mb-3">
-        <!--do custom label due to superscript-->
-        <label for="{{form.end.id}}" class="form-label">Start [cm<sup>-1</sup>]</label>
-        {{form.end(class="form-control", placeholder="1500")}}
-        {% if form.end.errors %}
-        <div class="alert alert-danger my-3" role="alert">
-            {% for error in form.end.errors %}
-            <p class="mb-0">
-                {{ error }}
-            </p>
-            {% endfor %}
-        </div>
-        {% endif %}
-    </div>
-    <button type="submit" class="btn btn-primary">Erstellen</button>
-</form>
+<div class="container mt-3 content">
 
+    <a class="icon-link icon-link-hover mb-2"
+       style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+       href="{{ url_for('spectral_ranges.index') }}">
+        <i class="bi bi-arrow-left mb-auto"></i>
+        Zurück
+    </a>
+    <h1>Bearbeiten <b><em>Spektralbereich</em></b></h1>
+    {% for mesg in get_flashed_messages() %}
+    <div class="alert alert-danger my-2" role="alert">
+        {{ mesg }}
+    </div>
+    {% endfor %}
+    <form method="POST" novalidate>
+        {{ form.csrf_token}}
+        <div class="mb-3">
+            <!--do custom label due to superscript-->
+            <label for="{{form.start.id}}" class="form-label">Start [cm<sup>-1</sup>]</label>
+            {{form.start(class="form-control", placeholder="20")}}
+            {% if form.start.errors %}
+            <div class="alert alert-danger my-3" role="alert">
+                {% for error in form.start.errors %}
+                <p class="mb-0">
+                    {{ error }}
+                </p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <!--do custom label due to superscript-->
+            <label for="{{form.end.id}}" class="form-label">Start [cm<sup>-1</sup>]</label>
+            {{form.end(class="form-control", placeholder="1500")}}
+            {% if form.end.errors %}
+            <div class="alert alert-danger my-3" role="alert">
+                {% for error in form.end.errors %}
+                <p class="mb-0">
+                    {{ error }}
+                </p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">Erstellen</button>
+    </form>
+</div>
 {% endblock %}

@@ -1,43 +1,46 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% include 'includes/backToStart.html' %}
-<div class="row">
-    <div class="col-12 col-md-8 d-flex align-items-center justify-content-start">
-        <h1>Übersicht <b><em>Vorbearbeitungsschritte</em></b></h1>
-    </div>
-    <div class="col-12 col-md-4 d-flex align-items-center justify-content-start justify-content-md-end">
-        <a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('preprocessing_steps.new') }}"><i
-                class="bi bi-plus-lg"></i>
-            Neuen Vorberarbeitungsschritt erstellen
-        </a>
-    </div>
-</div>
-{% if preprocessing_steps|length<=0 %}
-<h4>Es sind noch keine Vorbearbeitungsschritte hinterlegt</h4>
-{% else %}
+<div class="container mt-3 content">
 
-<table class="table">
-    <thead>
-    <tr>
-        <th scope="col">Bezeichnung</th>
-        <th>Aktionen</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for preprocessing_step in preprocessing_steps %}
-    <tr>
-        <td>{{ preprocessing_step.name }}</td>
-        <td>
-            <a type="button" class="btn btn-outline-primary btn-sm"
-               href="{{ url_for('preprocessing_steps.edit', preprocessing_step_id=preprocessing_step.id) }}"><i
-                    class="bi bi-pencil-fill"></i> Bearbeiten</a>
-            <a type="button" class="btn btn-outline-danger btn-sm"
-               href="{{ url_for('preprocessing_steps.delete', preprocessing_step_id=preprocessing_step.id) }}"><i
-                    class="bi bi-trash-fill"></i> Löschen</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-{% endif %}
+    {% include 'includes/backToStart.html' %}
+    <div class="row">
+        <div class="col-12 col-md-8 d-flex align-items-center justify-content-start">
+            <h1>Übersicht <b><em>Vorbearbeitungsschritte</em></b></h1>
+        </div>
+        <div class="col-12 col-md-4 d-flex align-items-center justify-content-start justify-content-md-end">
+            <a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('preprocessing_steps.new') }}"><i
+                    class="bi bi-plus-lg"></i>
+                Neuen Vorberarbeitungsschritt erstellen
+            </a>
+        </div>
+    </div>
+    {% if preprocessing_steps|length<=0 %}
+    <h4>Es sind noch keine Vorbearbeitungsschritte hinterlegt</h4>
+    {% else %}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Bezeichnung</th>
+            <th>Aktionen</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for preprocessing_step in preprocessing_steps %}
+        <tr>
+            <td>{{ preprocessing_step.name }}</td>
+            <td>
+                <a type="button" class="btn btn-outline-primary btn-sm"
+                   href="{{ url_for('preprocessing_steps.edit', preprocessing_step_id=preprocessing_step.id) }}"><i
+                        class="bi bi-pencil-fill"></i> Bearbeiten</a>
+                <a type="button" class="btn btn-outline-danger btn-sm"
+                   href="{{ url_for('preprocessing_steps.delete', preprocessing_step_id=preprocessing_step.id) }}"><i
+                        class="bi bi-trash-fill"></i> Löschen</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
 {% endblock %}

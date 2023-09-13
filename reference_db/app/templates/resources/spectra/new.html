@@ -1,59 +1,61 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<a class="icon-link icon-link-hover mb-2"
-   style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
-   href="{{ url_for('compounds.show', compound_id=compound_id) }}">
-    <i class="bi bi-arrow-left mb-auto"></i>
-    Zurück
-</a>
-<h1 class="mb-3">Spektrum hinzufügen</h1>
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% for cat, mesg in messages %}
-<div class="alert alert-{{cat}} my-2" role="alert">
-    {{ mesg }}
-</div>
-{% endfor %}
-{% endwith %}
+<div class="container mt-3 content">
 
-<form method="POST" enctype="multipart/form-data" novalidate>
-    {{ form.csrf_token }}
-    <h5>Welche Art von Spektrum möchten Sie hinzufügen?</h5>
-    <div class="mb-3">
-        {% for choice in form.spectrum_type.choices %}
-        <input type="radio" class="btn-check my-1" value="{{choice[0]}}" id="type_radio_{{choice[0]}}"
-               name="spectrum_type"
-               autocomplete="off" {% if choice[0]== 1 %} checked {% endif %}>
-        <label class="btn btn-sm btn-outline-success my-1" for="type_radio_{{choice[0]}}">{{choice[1]}}</label>
-        {% endfor %}
+    <a class="icon-link icon-link-hover mb-2"
+       style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+       href="{{ url_for('compounds.show', compound_id=compound_id) }}">
+        <i class="bi bi-arrow-left mb-auto"></i>
+        Zurück
+    </a>
+    <h1 class="mb-3">Spektrum hinzufügen</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, mesg in messages %}
+    <div class="alert alert-{{cat}} my-2" role="alert">
+        {{ mesg }}
     </div>
-    <div class="row">
-        <div class="col-6">
-            <div id="preprocessing_steps" class="mb-3" style="display: none">
-                <label class="form-label">Vorverarbeitungsschritte (Auswahl)</label>
-                <div>
-                    {% for choice in form.preprocessing_steps.choices %}
-                    <input type="checkbox" class="btn-check my-1" id="step_check_{{choice[0]}}" name="step_check"
-                           value="{{choice[0]}}"
-                           autocomplete="off">
-                    <label class="btn btn-sm btn-outline-success my-1"
-                           for="step_check_{{choice[0]}}">{{choice[1]}}</label>
-                    {% endfor %}
+    {% endfor %}
+    {% endwith %}
 
-                </div>
-            </div>
-            <div class="mb-3">
-                <label for="spectrum" class="form-label">Spektrum</label>
-                <input class="form-control" type="file" id="spectrum" name="spectrum">
-            </div>
-
-
+    <form method="POST" enctype="multipart/form-data" novalidate>
+        {{ form.csrf_token }}
+        <h5>Welche Art von Spektrum möchten Sie hinzufügen?</h5>
+        <div class="mb-3">
+            {% for choice in form.spectrum_type.choices %}
+            <input type="radio" class="btn-check my-1" value="{{choice[0]}}" id="type_radio_{{choice[0]}}"
+                   name="spectrum_type"
+                   autocomplete="off" {% if choice[0]== 1 %} checked {% endif %}>
+            <label class="btn btn-sm btn-outline-success my-1" for="type_radio_{{choice[0]}}">{{choice[1]}}</label>
+            {% endfor %}
         </div>
-    </div>
-    <button type="submit" class="btn btn-primary my-2">Spektrum hinzufügen</button>
+        <div class="row">
+            <div class="col-6">
+                <div id="preprocessing_steps" class="mb-3" style="display: none">
+                    <label class="form-label">Vorverarbeitungsschritte (Auswahl)</label>
+                    <div>
+                        {% for choice in form.preprocessing_steps.choices %}
+                        <input type="checkbox" class="btn-check my-1" id="step_check_{{choice[0]}}" name="step_check"
+                               value="{{choice[0]}}"
+                               autocomplete="off">
+                        <label class="btn btn-sm btn-outline-success my-1"
+                               for="step_check_{{choice[0]}}">{{choice[1]}}</label>
+                        {% endfor %}
 
-</form>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="spectrum" class="form-label">Spektrum</label>
+                    <input class="form-control" type="file" id="spectrum" name="spectrum">
+                </div>
 
+
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary my-2">Spektrum hinzufügen</button>
+
+    </form>
+</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -68,8 +70,7 @@
                     console.log("display")
 
                     contentToHide.style.display = "block";
-                }
-                else if (option.checked && option.value === "3") {
+                } else if (option.checked && option.value === "3") {
                     contentToHide.style.display = "none";
                 }
             });

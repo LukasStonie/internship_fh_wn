@@ -1,36 +1,37 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container mt-3 content">
 
-<a class="icon-link icon-link-hover mb-2"
-   style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
-   href="{{ url_for('slides.index') }}">
-    <i class="bi bi-arrow-left mb-auto"></i>
-    Zurück
-</a>
-<h1>Erstellen <b><em>Objektträger</em></b></h1>
-{% for mesg in get_flashed_messages() %}
-<div class="alert alert-danger my-2" role="alert">
-    {{ mesg }}
-</div>
-{% endfor %}
-<form method="POST" novalidate>
-    {{ form.csrf_token}}
-    <div class="mb-3">
-        {{form.name.label(class="form-label")}}
-        {{form.name(class="form-control", placeholder="Calciumflourid")}}
-        {% if form.name.errors %}
-            <div class="alert alert-danger my-3" role="alert">
-            {% for error in form.name.errors %}
-            <p class="mb-0">
-                {{ error }}
-            </p>
-            {% endfor %}
-        </div>
-        {% endif %}
-
+    <a class="icon-link icon-link-hover mb-2"
+       style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+       href="{{ url_for('slides.index') }}">
+        <i class="bi bi-arrow-left mb-auto"></i>
+        Zurück
+    </a>
+    <h1>Erstellen <b><em>Objektträger</em></b></h1>
+    {% for mesg in get_flashed_messages() %}
+    <div class="alert alert-danger my-2" role="alert">
+        {{ mesg }}
     </div>
-    <button type="submit" class="btn btn-primary">Erstellen</button>
-</form>
+    {% endfor %}
+    <form method="POST" novalidate>
+        {{ form.csrf_token}}
+        <div class="mb-3">
+            {{form.name.label(class="form-label")}}
+            {{form.name(class="form-control", placeholder="Calciumflourid")}}
+            {% if form.name.errors %}
+            <div class="alert alert-danger my-3" role="alert">
+                {% for error in form.name.errors %}
+                <p class="mb-0">
+                    {{ error }}
+                </p>
+                {% endfor %}
+            </div>
+            {% endif %}
 
+        </div>
+        <button type="submit" class="btn btn-primary">Erstellen</button>
+    </form>
+</div>
 {% endblock %}

@@ -1,35 +1,36 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container mt-3 content">
 
-<a class="icon-link icon-link-hover mb-2"
-   style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
-   href="{{ url_for('resolutions.index') }}">
-    <i class="bi bi-arrow-left mb-auto"></i>
-    Zurück
-</a>
-<h1>Neue Auflösung erstellen</h1>
-{% for mesg in get_flashed_messages() %}
-<div class="alert alert-danger my-2" role="alert">
-    {{ mesg }}
-</div>
-{% endfor %}
-<form method="POST" novalidate>
-    {{ form.csrf_token }}
-    <div class="mb-3">
-        {{form.description.label(class="form-label")}}
-        {{form.description(class="form-control", placeholder="2.0 - 3.5")}}
-        {% if form.description.errors %}
-        <div class="alert alert-danger my-3" role="alert">
-            {% for error in form.description.errors %}
-            <p class="mb-0">
-                {{ error }}
-            </p>
-            {% endfor %}
-        </div>
-        {% endif %}
+    <a class="icon-link icon-link-hover mb-2"
+       style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+       href="{{ url_for('resolutions.index') }}">
+        <i class="bi bi-arrow-left mb-auto"></i>
+        Zurück
+    </a>
+    <h1>Neue Auflösung erstellen</h1>
+    {% for mesg in get_flashed_messages() %}
+    <div class="alert alert-danger my-2" role="alert">
+        {{ mesg }}
     </div>
-    <button type="submit" class="btn btn-primary">Erstellen</button>
-</form>
-
+    {% endfor %}
+    <form method="POST" novalidate>
+        {{ form.csrf_token }}
+        <div class="mb-3">
+            {{form.description.label(class="form-label")}}
+            {{form.description(class="form-control", placeholder="2.0 - 3.5")}}
+            {% if form.description.errors %}
+            <div class="alert alert-danger my-3" role="alert">
+                {% for error in form.description.errors %}
+                <p class="mb-0">
+                    {{ error }}
+                </p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">Erstellen</button>
+    </form>
+</div>
 {% endblock %}

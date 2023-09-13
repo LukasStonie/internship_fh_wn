@@ -1,49 +1,53 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="row h-100">
+<div class="container mt-3 content">
 
-    <div class="col-md-6 d-flex mx-auto flex-column">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        <div class="row">
-            {% for category, message in messages %}
-            <div class="alert alert-{{category}} my-2" role="alert">
-                {{ message }}
+    <div class="row h-100">
+
+        <div class="col-md-6 d-flex mx-auto flex-column">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            <div class="row">
+                {% for category, message in messages %}
+                <div class="alert alert-{{category}} my-2" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+            {% endwith %}
+            <div class="row">
+                <div class="col-12 d-flex align-items-center justify-content-start">
+                    <h1>Anmelden</h1>
+                </div>
+            </div>
+
+
+            <form method="POST" class="g-3 mb-5">
+                {{ form.csrf_token }}
+
+                <div class="mb-3">
+                    {{form.email.label(class="form-label")}}
+                    {{form.email(class="form-control", type="email", placeholder="user@domain.at")}}
+                </div>
+                <div class="mb-3">
+                    {{form.password.label(class="form-label")}}
+                    {{form.password(class="form-control", type="password", placeholder="********")}}
+                </div>
+
+
+                <button type="submit" class="btn btn-primary">Anmelden</button>
+            </form>
+            <div class="row">
+                <div class="col-12 d-flex align-items-center justify-content-evenly">
+                    <span>Sie haben noch keinen Account? </span> <a class="link-primary"
+                                                                    href="{{url_for('auth.signup')}}"> Hier
+                    registrieren</a>
+                </div>
+            </div>
+
         </div>
-        {% endwith %}
-        <div class="row">
-            <div class="col-12 d-flex align-items-center justify-content-start">
-                <h1>Anmelden</h1>
-            </div>
-        </div>
 
-
-        <form method="POST" class="g-3 mb-5">
-            {{ form.csrf_token }}
-
-            <div class="mb-3">
-                {{form.email.label(class="form-label")}}
-                {{form.email(class="form-control", type="email", placeholder="user@domain.at")}}
-            </div>
-            <div class="mb-3">
-                {{form.password.label(class="form-label")}}
-                {{form.password(class="form-control", type="password", placeholder="********")}}
-            </div>
-
-
-            <button type="submit" class="btn btn-primary">Anmelden</button>
-        </form>
-        <div class="row">
-            <div class="col-12 d-flex align-items-center justify-content-evenly">
-                <span>Sie haben noch keinen Account? </span> <a class="link-primary"
-                                                                href="{{url_for('auth.signup')}}"> Hier
-                registrieren</a>
-            </div>
-        </div>
 
     </div>
-
-
-</div>{% endblock %}
+</div>
+{% endblock %}
