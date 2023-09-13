@@ -30,35 +30,47 @@ def index():
 @login_required
 @admin_required
 def activate(user_id):
-    user = db.session.query(User).filter(User.id == user_id).first()
-    if user.active:
-        flash('User ist bereits aktiviert', 'danger')
+    try:
+        user = db.session.query(User).filter(User.id == user_id).first()
+        if user.active:
+            flash('User ist bereits aktiviert', 'danger')
+            return redirect(url_for('admin.index'))
+        user.active = True
+        db.session.commit()
+        flash('User wurde aktiviert', 'success')
         return redirect(url_for('admin.index'))
-    user.active = True
-    db.session.commit()
-    flash('User wurde aktiviert', 'success')
-    return redirect(url_for('admin.index'))
+    except:
+        flash('User konnte nicht aktiviert werden', 'danger')
+        return redirect(url_for('admin.index'))
 
 
 @bp.route('/deactivate/<user_id>')
 @login_required
 @admin_required
 def deactivate(user_id):
-    user = db.session.query(User).filter(User.id == user_id).first()
-    if not user.active:
-        flash('User ist bereits deaktiviert', 'danger')
+    try:
+        user = db.session.query(User).filter(User.id == user_id).first()
+        if not user.active:
+            flash('User ist bereits deaktiviert', 'danger')
+            return redirect(url_for('admin.index'))
+        user.active = False
+        db.session.commit()
+        flash('User wurde deaktiviert', 'success')
         return redirect(url_for('admin.index'))
-    user.active = False
-    db.session.commit()
-    flash('User wurde deaktiviert', 'success')
-    return redirect(url_for('admin.index'))
+    except:
+        flash('User konnte nicht deaktiviert werden', 'danger')
+        return redirect(url_for('admin.index'))
 
 @bp.route('/delete/<user_id>')
 @login_required
 @admin_required
 def delete(user_id):
-    user = db.session.query(User).filter(User.id == user_id).first()
-    db.session.delete(user)
-    db.session.commit()
-    flash('User wurde gelöscht', 'success')
-    return redirect(url_for('admin.index'))
+    try:
+        user = db.session.query(User).filter(User.id == user_id).first()
+        db.session.delete(user)
+        db.session.commit()
+        flash('User wurde gelöscht', 'success')
+        return redirect(url_for('admin.index'))
+    except:
+        flash('User konnte nicht gelöscht werden', 'danger')
+        return redirect(url_for('admin.index'))

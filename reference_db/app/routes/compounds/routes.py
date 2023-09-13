@@ -138,6 +138,7 @@ def delete(compound_id):
     compound = db.session.query(Compound).filter(Compound.id == compound_id).first()
     db.session.delete(compound)
     db.session.commit()
+    flash("Substanz wurde gelöscht", 'success')
     return redirect(url_for('compounds.index'))
 
 

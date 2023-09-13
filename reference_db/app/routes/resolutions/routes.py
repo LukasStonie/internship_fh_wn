@@ -75,7 +75,15 @@ def edit_post(resolution_id):
 @bp.route('/<resolution_id>/delete', methods=['GET', 'POST'])
 @login_required
 def delete(resolution_id):
-    resolution = db.session.query(Resolution).filter_by(id=resolution_id).first()
-    db.session.delete(resolution)
-    db.session.commit()
-    return redirect(url_for('resolutions.index'))
+    try:
+        resolution = db.session.query(Resolution).filter_by(id=resolution_id).first()
+        db.session.delete(resolution)
+        db.session.commit()
+        flash("Auflösung wurde gelöscht", 'success')
+        return redirect(url_for('resolutions.index'))
+    except sqlalchemy.exc.IntegrityError:
+        flash('Diese Auflösung wird noch verwendet und kann daher nicht gelöscht werden', 'danger')
+        return redirect(url_for('resolutions.index'))
+    except:
+        flash('Auflösung konnte nicht gelöscht werden. Probieren Sie es später erneut', 'danger')
+        return redirect(url_for('resolutions.index'))

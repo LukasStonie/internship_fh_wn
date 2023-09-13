@@ -76,7 +76,15 @@ def edit_post(aperture_id):
 @bp.route('/<aperture_id>/delete', methods=['GET', 'POST'])
 @login_required
 def delete(aperture_id):
-    aperture = db.session.query(Aperture).filter(Aperture.id == aperture_id).first()
-    db.session.delete(aperture)
-    db.session.commit()
-    return redirect(url_for('apertures.index'))
+    try:
+        aperture = db.session.query(Aperture).filter(Aperture.id == aperture_id).first()
+        db.session.delete(aperture)
+        db.session.commit()
+        flash("Apertur wurde gelöscht", 'success')
+        return redirect(url_for('apertures.index'))
+    except sqlalchemy.exc.IntegrityError:
+        flash('Diese Apertur wird noch verwendet und kann daher nicht gelöscht werden.', 'danger')
+        return redirect(url_for('apertures.index'))
+    except:
+        flash('Apertur konnte nicht gelöscht werden. Probieren Sie es später erneut.', 'danger')
+        return redirect(url_for('apertures.index'))

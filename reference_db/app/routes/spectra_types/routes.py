@@ -79,4 +79,5 @@ def delete(spectrum_type_id):
     spectrum_type = db.session.query(SpectrumType).filter(SpectrumType.id == spectrum_type_id).first()
     db.session.delete(spectrum_type)
     db.session.commit()
+    flash("Spektrumart wurde gelöscht", 'success')
     return redirect(url_for('spectra_types.index'))

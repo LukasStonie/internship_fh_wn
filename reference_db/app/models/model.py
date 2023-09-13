@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, Integer, BLOB, String, ForeignKey, UniqueConstraint, BOOLEAN
+from sqlalchemy import Table, Column, Integer, BLOB, String, ForeignKey, UniqueConstraint, BOOLEAN, ForeignKeyConstraint
 from sqlalchemy.orm import declarative_base, relationship, backref
 from flask_login import UserMixin
 
@@ -36,6 +36,7 @@ class Group(Base):
 
     def __repr__(self):
         return f'<Group "{self.name}">'
+
 
 class Substrate(Base):
     __tablename__ = 'substrates'
@@ -101,6 +102,8 @@ class Aperture(Base):
 
     id = Column(Integer, primary_key=True)
     size = Column(String(20), nullable=False)
+
+    # compund = relationship("Compound", backref="Aperture", passive_deletes='all')
 
     __table_args__ = (
         UniqueConstraint('size', name='u_size'),
@@ -214,6 +217,15 @@ class Compound(Base):
     date = Column(String(15), nullable=False)
 
     spectra = relationship("Spectrum", backref="compound", cascade="all, delete")
+
+    # block deletion of coresponding rows in other tables when used in a compound
+    lens = relationship("Lens", backref="compound", passive_deletes='all')
+    laser = relationship("Laser", backref="compound", passive_deletes='all')
+    spectral_range = relationship("SpectralRange", backref="compound", passive_deletes='all')
+    resolution = relationship("Resolution", backref="compound", passive_deletes='all')
+    slide = relationship("Slide", backref="compound", passive_deletes='all')
+    substrate = relationship("Substrate", backref="compound", passive_deletes='all')
+    aperture = relationship("Aperture", backref="compound", passive_deletes='all')
 
     def __repr__(self):
         return f'<Compound "{self.name}">'

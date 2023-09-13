@@ -76,8 +76,16 @@ def edit_post(preprocessing_step_id):
 @bp.route('/<preprocessing_step_id>/delete', methods=['GET', 'POST'])
 @login_required
 def delete(preprocessing_step_id):
-    preprocessing_step = db.session.query(PreprocessingSteps).filter(
-        PreprocessingSteps.id == preprocessing_step_id).first()
-    db.session.delete(preprocessing_step)
-    db.session.commit()
-    return redirect(url_for('preprocessing_steps.index'))
+    try:
+        preprocessing_step = db.session.query(PreprocessingSteps).filter(
+            PreprocessingSteps.id == preprocessing_step_id).first()
+        db.session.delete(preprocessing_step)
+        db.session.commit()
+        flash("Vorverarbeitungsschritt wurde gelöscht", 'success')
+        return redirect(url_for('preprocessing_steps.index'))
+    except sqlalchemy.exc.IntegrityError:
+        flash("Dieser Vorverarbeitungsschritt wird noch verwendet und kann daher nicht gelöscht werden", 'danger')
+        return redirect(url_for('preprocessing_steps.index'))
+    except:
+        flash("Vorverarbeitungsschritt konnte nicht gelöscht werden", 'danger')
+        return redirect(url_for('preprocessing_steps.index'))

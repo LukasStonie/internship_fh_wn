@@ -75,7 +75,15 @@ def edit_post(laser_id):
 @bp.route('/<laser_id>/delete')
 @login_required
 def delete(laser_id):
-    laser = db.session.query(Laser).filter(Laser.id == laser_id).first()
-    db.session.delete(laser)
-    db.session.commit()
-    return redirect(url_for('lasers.index'))
+    try:
+        laser = db.session.query(Laser).filter(Laser.id == laser_id).first()
+        db.session.delete(laser)
+        db.session.commit()
+        flash("Laser wurde gelöscht", 'success')
+        return redirect(url_for('lasers.index'))
+    except sqlalchemy.exc.IntegrityError:
+        flash('Dieser Laser wird noch verwendet und kann daher nicht gelöscht werden', 'danger')
+        return redirect(url_for('lasers.index'))
+    except:
+        flash('Laser konnte nicht gelöscht werden. Probieren Sie es später erneut', 'danger')
+        return redirect(url_for('lasers.index'))

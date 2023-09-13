@@ -76,7 +76,15 @@ def edit_post(spectral_range_id):
 @bp.route('/<spectral_range_id>/delete')
 @login_required
 def delete(spectral_range_id):
-    spectral_range = db.session.query(SpectralRange).filter(SpectralRange.id == spectral_range_id).first()
-    db.session.delete(spectral_range)
-    db.session.commit()
-    return redirect(url_for('spectral_ranges.index'))
+    try:
+        spectral_range = db.session.query(SpectralRange).filter(SpectralRange.id == spectral_range_id).first()
+        db.session.delete(spectral_range)
+        db.session.commit()
+        flash("Spektralbereich wurde gelöscht", 'success')
+        return redirect(url_for('spectral_ranges.index'))
+    except sqlalchemy.exc.IntegrityError:
+        flash('Dieser Spektralbereich wird noch verwendet und konnte daher nicht gelöscht werden', 'danger')
+        return redirect(url_for('spectral_ranges.index'))
+    except:
+        flash("Spektralbereich konnte nicht gelöscht werden. Probieren Sie es später erneut.", 'danger')
+        return redirect(url_for('spectral_ranges.index'))

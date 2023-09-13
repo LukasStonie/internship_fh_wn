@@ -75,7 +75,15 @@ def edit_post(slide_id):
 @bp.route('/<slide_id>/delete')
 @login_required
 def delete(slide_id):
-    slide = db.session.query(Slide).filter(Slide.id == slide_id).first()
-    db.session.delete(slide)
-    db.session.commit()
-    return redirect(url_for('slides.index'))
+    try:
+        slide = db.session.query(Slide).filter(Slide.id == slide_id).first()
+        db.session.delete(slide)
+        db.session.commit()
+        flash("Objektträger wurde gelöscht", 'success')
+        return redirect(url_for('slides.index'))
+    except sqlalchemy.exc.IntegrityError:
+        flash("Dieser Objektträger wird noch verwendet und konnte daher nicht gelöscht werden", 'danger')
+        return redirect(url_for('slides.index'))
+    except:
+        flash("Objektträger konnte nicht gelöscht werden", 'danger')
+        return redirect(url_for('slides.index'))

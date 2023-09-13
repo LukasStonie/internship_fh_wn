@@ -88,10 +88,18 @@ def edit_post(substrate_id):
 @bp.route('/<substrate_id>/delete', methods=['GET', 'POST'])
 @login_required
 def delete(substrate_id):
-    substrate = db.session.query(Substrate).filter(Substrate.id == substrate_id).first()
-    db.session.delete(substrate)
-    db.session.commit()
-    return redirect(url_for('substrates.index'))
+    try:
+        substrate = db.session.query(Substrate).filter(Substrate.id == substrate_id).first()
+        db.session.delete(substrate)
+        db.session.commit()
+        flash("Substrat wurde gelöscht", 'success')
+        return redirect(url_for('substrates.index'))
+    except sqlalchemy.exc.IntegrityError:
+        flash("Dieses Substrat wird noch verwendet und kann daher nicht gelöscht werden", 'danger')
+        return redirect(url_for('substrates.index'))
+    except:
+        flash("Substrat kann nicht gelöscht werden", 'danger')
+        return redirect(url_for('substrates.index'))
 
 
 @bp.route('/<substrate_id>/download', methods=['GET', 'POST'])

@@ -79,7 +79,15 @@ def edit_post(lens_id):
 @bp.route('/<lens_id>/delete')
 @login_required
 def delete(lens_id):
-    lens = db.session.query(Lens).filter(Lens.id == lens_id).first()
-    db.session.delete(lens)
-    db.session.commit()
-    return redirect(url_for('lenses.index'))
+    try:
+        lens = db.session.query(Lens).filter(Lens.id == lens_id).first()
+        db.session.delete(lens)
+        db.session.commit()
+        flash("Objektiv wurde gelöscht", 'success')
+        return redirect(url_for('lenses.index'))
+    except sqlalchemy.exc.IntegrityError:
+        flash('Dieses Objektiv wird noch verwendet und kann daher nicht gelöscht werden', 'danger')
+        return redirect(url_for('lenses.index'))
+    except:
+        flash('Objektiv konnte nicht gelöscht werden. Probieren Sie es später erneut.', 'danger')
+        return redirect(url_for('lenses.index'))

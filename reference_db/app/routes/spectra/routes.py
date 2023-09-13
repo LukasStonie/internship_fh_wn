@@ -210,6 +210,7 @@ def delete(spectrum_id):
     # remove spectrum from db
     db.session.delete(spectrum)
     db.session.commit()
+    flash("Spektrum wurde gelöscht", 'success')
     return redirect(url_for('compounds.show', compound_id=compound_id))
 
 
