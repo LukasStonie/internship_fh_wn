@@ -79,7 +79,11 @@ def delete(preprocessing_step_id):
     try:
         preprocessing_step = db.session.query(PreprocessingSteps).filter(
             PreprocessingSteps.id == preprocessing_step_id).first()
-        db.session.delete(preprocessing_step)
+        # db.session.delete(preprocessing_step) # does not honor the foreign key constraint
+        # deleting with the delete function does not work
+        # because of the foreign key constraint
+        # therefore, we use the execute function
+        db.session.execute(f"DELETE FROM preprocessing_steps where id = :id", {"id": preprocessing_step.id})
         db.session.commit()
         flash("Vorverarbeitungsschritt wurde gelöscht", 'success')
         return redirect(url_for('preprocessing_steps.index'))

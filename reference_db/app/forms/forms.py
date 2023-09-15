@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 from wtforms import (StringField, TextAreaField, IntegerField, BooleanField,
-                     RadioField, PasswordField, SelectField, SelectMultipleField, SubmitField)
-from wtforms.fields.html5 import EmailField
+                     RadioField, PasswordField, SelectField, SelectMultipleField, SubmitField, FieldList, FormField)
+from wtforms.fields.html5 import EmailField, DecimalField
 from wtforms.validators import InputRequired, Length, Email, EqualTo
 
 
@@ -103,3 +103,31 @@ class SpectraEditForm(FlaskForm):
                                validators=[InputRequired(message='Bitte wählen Sie einen Spektrumtyp aus')])
     preprocessing_steps = SelectMultipleField('Vorverarbeitung', validate_choice=False, validators=[])
     new_spectrum = BooleanField('Spektrum austauschen')
+
+
+class IntensityForm(FlaskForm):
+    shorthand = StringField('Kürzel', validators=[InputRequired(message='Bitte geben Sie ein Kürzel an'),
+                                                  Length(min=1, max=3,
+                                                         message="Das Kürzel darf maximal drei Zeichen lang sein")])
+    description = StringField('Beschreibung',
+                              validators=[InputRequired(message='Bitte geben Sie eine Beschreibung an')])
+
+
+class WaveNumberIntensityPairForm(FlaskForm):
+
+    wavenumber = IntegerField('Wellenzahl [cm<sup>-1</sup>]', default=3,
+                              validators=[InputRequired(message='Bitte geben Sie eine Wellenzahl an')])
+    intensity = SelectField('Intensity', validate_choice=False,
+                              validators=[InputRequired(message='Bitte wählen Sie eine Intensity aus')], choices=[(1,"Penis")])
+
+    def __str__(self):
+        return f"wavenumber: {self.wavenumber.data}"
+
+class PeakForm(FlaskForm):
+    """wavenumber = IntegerField('Wellenzahl [cm<sup>-1</sup>]', default=3,
+                              validators=[InputRequired(message='Bitte geben Sie eine Wellenzahl an')])
+    intensity = SelectField('Intensity', validate_choice=False,
+                            validators=[InputRequired(message='Bitte wählen Sie eine Intensity aus')],
+                            choices=[(1, "Penis")])"""
+
+    peaks = FieldList(FormField(WaveNumberIntensityPairForm))

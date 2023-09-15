@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-3 content">
+
+    <a class="icon-link icon-link-hover mb-2"
+       style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+       href="{{ url_for('intensities.index') }}">
+        <i class="bi bi-arrow-left mb-auto"></i>
+        Zurück
+    </a>
+
+    <h1>Erstellen <b><em>Peaks</em></b></h1>
+    {% include 'includes/errors.html' %}
+    <div class="row">
+        <div class="col-md-6">
+            <form method="POST" novalidate>
+                {{form.crsf_token}}
+                {% for pair in form.peaks %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="{{pair.wavenumber.id}}" class="form-label">Wavenumber [cm<sup>-1</sup>]</label>
+                        {{pair.wavenumber(class="form-control", readonly=True, value=pair.wavenumber.default)}}
+                    </div>
+                    <div class="col-md-6">
+                        {{pair.intensity.label(class="form-label")}}
+                        {{pair.intensity(class="form-select")}}
+                    </div>
+                </div>
+                {% endfor %}
+            </form>
+        </div>
+        <div class="col-md-6">
+            <img src="data:image/png;base64,{{plot}}" width="100%">
+        </div>
+    </div>
+</div>
+{% endblock %}

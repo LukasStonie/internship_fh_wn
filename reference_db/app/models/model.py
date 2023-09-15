@@ -1,10 +1,23 @@
-from sqlalchemy import Table, Column, Integer, BLOB, String, ForeignKey, UniqueConstraint, BOOLEAN, ForeignKeyConstraint
+from sqlalchemy import Table, Column, Integer, BLOB, String, ForeignKey, UniqueConstraint, BOOLEAN, \
+    ForeignKeyConstraint, event
 from sqlalchemy.orm import declarative_base, relationship, backref
 from flask_login import UserMixin
+from sqlalchemy import event
+from sqlalchemy.engine import Engine
 
 import app
 
 Base = declarative_base()
+
+from sqlite3 import Connection as SQLite3Connection
+
+
+@event.listens_for(Engine, "connect")
+def _set_sqlite_pragma(dbapi_connection, connection_record):
+    if isinstance(dbapi_connection, SQLite3Connection):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON;")
+        cursor.close()
 
 
 class User(UserMixin, Base):
@@ -144,7 +157,8 @@ class Lens(Base):
 
 spectrum_has_preprocessing_steps = Table('spectrum_has_preprocessing_steps', Base.metadata,
                                          Column("spectrum_id", ForeignKey('spectra.id')),
-                                         Column("preprocessing_step_id", ForeignKey('preprocessing_steps.id')))
+                                         Column("preprocessing_step_id",
+                                                ForeignKey('preprocessing_steps.id', ondelete='RESTRICT')))
 
 
 class Spectrum(Base):
@@ -153,10 +167,12 @@ class Spectrum(Base):
     id = Column(Integer, primary_key=True)
     file_path = Column(String(200), nullable=False)
     compound_id = Column(Integer, ForeignKey('compounds.id'))
-    spectrum_type_id = Column(Integer, ForeignKey('spectrum_types.id'))
+    spectrum_type_id = Column(Integer, ForeignKey('spectrum_types.id'), nullable=False)
     preprocessing_steps = relationship("PreprocessingSteps",
                                        secondary=spectrum_has_preprocessing_steps,
                                        back_populates="spectra")
+    # block deletion of coresponding rows in other tables when used in a spectrum
+    spectrum_type = relationship("SpectrumType", backref="spectra", passive_deletes='all')
 
     __table_args__ = (
         UniqueConstraint('file_path', name='u_file_path'),
@@ -197,6 +213,38 @@ class PreprocessingSteps(Base):
         return f'<PreprocessingSteps "{self.name}">'
 
 
+class Intensity(Base):
+    __tablename__ = 'intensities'
+    id = Column(Integer, primary_key=True)
+    shorthand = Column(String(3), nullable=False)
+    description = Column(String(15), nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint('shorthand', name='u_shorthand'),
+    )
+
+    def __repr__(self):
+        return f'<Intensity {self.shorthand}: {self.description}>'
+
+
+class Peak(Base):
+    __tablename__ = 'peaks'
+    id = Column(Integer, primary_key=True)
+    spectrum_id = Column(Integer, ForeignKey('spectra.id'), nullable=False)
+    wavenumber = Column(Integer, nullable=False)
+    intensity_id = Column(Integer, ForeignKey('intensities.id'), nullable=False)
+
+    spectrum = relationship("Spectrum", backref="peaks")
+    intensity = relationship("Intensity", backref="peaks")
+
+    __table_args__ = (
+        UniqueConstraint('spectrum_id', 'wavenumber', name='u_spectrum_id_wavenumber'),
+    )
+
+    def __repr__(self):
+        return f'<Peak {self.wavenumber} {self.intensity_id}>'
+
+
 class Compound(Base):
     __tablename__ = 'compounds'
 
@@ -211,7 +259,7 @@ class Compound(Base):
     resolution_id = Column(Integer, ForeignKey('resolutions.id'), nullable=False)
     aperture_id = Column(Integer, ForeignKey('apertures.id'), nullable=False)
     slide_id = Column(Integer, ForeignKey('slides.id'), nullable=False)
-    substrate_id = Column(Integer, ForeignKey('substrates.id'), nullable=True)
+    substrate_id = Column(Integer, ForeignKey('substrates.id', ondelete='RESTRICT'), nullable=True)
     user = Column(String(200), nullable=False)
     description = Column(String(400), nullable=True)
     date = Column(String(15), nullable=False)
@@ -224,8 +272,9 @@ class Compound(Base):
     spectral_range = relationship("SpectralRange", backref="compound", passive_deletes='all')
     resolution = relationship("Resolution", backref="compound", passive_deletes='all')
     slide = relationship("Slide", backref="compound", passive_deletes='all')
-    substrate = relationship("Substrate", backref="compound", passive_deletes='all')
     aperture = relationship("Aperture", backref="compound", passive_deletes='all')
+
+    substrate = relationship("Substrate", backref="compound")
 
     def __repr__(self):
         return f'<Compound "{self.name}">'

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-3 content">
+    {% include 'includes/backToStart.html' %}
+    {% include 'includes/errors.html' %}
+    <div class="row">
+        <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+            <h1>Übersicht <b><em>Intensitäten</em></b></h1>
+        </div>
+        <div class="col-12 col-md-6 d-flex align-items-center justify-content-start justify-content-md-end">
+            <a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('intensities.new') }}"><i
+                    class="bi bi-plus-lg"></i>
+                Neue Intensität erstellen
+            </a>
+        </div>
+    </div>
+    {% if intensities|length<=0 %}
+    <h4>Es sind noch keine Intensitäten hinterlegt</h4>
+    {% else %}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Abkürzung</th>
+            <th>Beschreibung</th>
+            <th>Aktionen</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for intensity in intensities %}
+        <tr>
+            <td>{{ intensity.shorthand }}</td>
+            <td>{{ intensity.description }}</td>
+            <td>
+                <a type="button" class="btn btn-outline-primary btn-sm"
+                   href="{{ url_for('intensities.edit', intensity_id=intensity.id) }}"><i class="bi bi-pencil-fill"></i>
+                    Bearbeiten</a>
+                <a type="button" class="btn btn-outline-danger btn-sm"
+                   href="{{ url_for('intensities.delete', intensity_id=intensity.id) }}"><i class="bi bi-trash-fill"></i> Löschen</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

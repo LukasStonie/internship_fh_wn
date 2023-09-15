@@ -76,8 +76,14 @@ def edit_post(spectrum_type_id):
 @bp.route('/<spectrum_type_id>/delete')
 @login_required
 def delete(spectrum_type_id):
-    spectrum_type = db.session.query(SpectrumType).filter(SpectrumType.id == spectrum_type_id).first()
-    db.session.delete(spectrum_type)
-    db.session.commit()
-    flash("Spektrumart wurde gelöscht", 'success')
-    return redirect(url_for('spectra_types.index'))
+    try:
+        spectrum_type = db.session.query(SpectrumType).filter(SpectrumType.id == spectrum_type_id).first()
+        db.session.delete(spectrum_type)
+        db.session.commit()
+        flash("Spektrumart wurde gelöscht", 'success')
+        return redirect(url_for('spectra_types.index'))
+    except sqlalchemy.exc.IntegrityError:
+        flash('Diese Spektrumart wird noch verwendet und kann daher nicht gelöscht werden.', 'danger')
+        return redirect(url_for('spectra_types.index'))
+    except:
+        flash('Spektrumart konnte nicht gelöscht werden. Probieren Sie es später erneut.', 'danger')

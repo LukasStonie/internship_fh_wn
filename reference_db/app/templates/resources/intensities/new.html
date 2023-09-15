@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-3 content">
+
+    <a class="icon-link icon-link-hover mb-2"
+       style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+       href="{{ url_for('intensities.index') }}">
+        <i class="bi bi-arrow-left mb-auto"></i>
+        Zurück
+    </a>
+
+    <h1>Erstellen <b><em>Intensität</em></b></h1>
+    {% include 'includes/errors.html' %}
+    <form method="POST" novalidate class="row g-3">
+        {{form.csrf_token}}
+        <div class="mb-3 col-md-6">
+            {{ form.shorthand.label(class="form-label") }}
+            {{ form.shorthand(class="form-control", placeholder="vs")}}
+            {% if form.shorthand.errors %}
+            <div class="alert alert-danger my-3" role="alert">
+                {% for error in form.shorthand.errors %}
+                <p class="mb-0">
+                    {{ error }}
+                </p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="mb-3 col-md-6">
+            {{ form.description.label(class="form-label") }}
+            {{ form.description(class="form-control", placeholder="very strong")}}
+            {% if form.description.errors %}
+            <div class="alert alert-danger my-3" role="alert">
+                {% for error in form.description.errors %}
+                <p class="mb-0">
+                    {{ error }}
+                </p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Erstellen</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

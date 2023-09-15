@@ -16,6 +16,7 @@ def create_app(config_class=Config):
     # csrf token for forms
     from app.extensions import csrf
     csrf.init_app(app)
+
     # user session management
     from flask_login import LoginManager
     login_manager = LoginManager()
@@ -70,8 +71,10 @@ def create_app(config_class=Config):
     from app.routes.admin import bp as admin_bp
     app.register_blueprint(admin_bp, url_prefix='/admin')
 
-    @app.route('/test/')
-    def test_page():
-        return '<h1>Testing the Flask Application Factory Pattern</h1>'
+    from app.routes.intensities import bp as intensities_bp
+    app.register_blueprint(intensities_bp, url_prefix='/intensities')
+
+    from app.routes.peaks import bp as peaks_bp
+    app.register_blueprint(peaks_bp, url_prefix='/peaks')
 
     return app

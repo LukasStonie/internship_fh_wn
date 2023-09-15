@@ -90,7 +90,11 @@ def edit_post(substrate_id):
 def delete(substrate_id):
     try:
         substrate = db.session.query(Substrate).filter(Substrate.id == substrate_id).first()
-        db.session.delete(substrate)
+        # db.session.delete(substrate) # not honoring the foreign key constraint
+        # deleting with the delete function does not work
+        # because of the foreign key constraint
+        # therefore, we use the execute function
+        db.session.execute(f"DELETE FROM substrates WHERE id = :id", {"id": substrate_id})
         db.session.commit()
         flash("Substrat wurde gelöscht", 'success')
         return redirect(url_for('substrates.index'))
