@@ -10,23 +10,23 @@
         Zurück
     </a>
 
-    <h1>Erstellen <b><em>Peaks</em></b></h1>
+    <h1>Bearbeiten <b><em>Peaks</em></b></h1>
     {% include 'includes/errors.html' %}
     <div class="row">
         <div class="col-md-6">
             <form method="POST" novalidate>
                 {{ form.csrf_token}}
-                {% for wn in wavenumbers %}
+                {% for peak in peaks %}
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="{{wn}}" class="form-label">Wellenzahl [cm<sup>-1</sup>]</label>
-                        <input type="number" class="form-control" id="{{wn}}" value="{{wn}}" disabled>
+                        <label for="{{peak.wavenumber}}" class="form-label">Wellenzahl [cm<sup>-1</sup>]</label>
+                        <input type="number" class="form-control" id="{{peak.wavenumber}}" value="{{peak.wavenumber}}" disabled>
                     </div>
                     <div class="col-md-6">
-                        <label for="{{wn}}_intensity" class="form-label">Intensität</label>
-                        <select class="form-select" id="{{wn}}_intensity" name="{{wn}}_intensity">
+                        <label for="{{peak.wavenumber}}_intensity" class="form-label">Intensität</label>
+                        <select class="form-select" id="{{peak.wavenumber}}_intensity" name="{{peak.wavenumber}}_intensity">
                             {% for intensity in intensities %}
-                            <option value="{{intensity.id}}">{{intensity.shorthand}} ({{intensity.description}})</option>
+                            <option value="{{intensity.id}}" {% if peak.intensity_id == intensity.id %} selected {% endif %}>{{intensity.shorthand}} ({{intensity.description}})</option>
                             {% endfor %}
                         </select>
                     </div>

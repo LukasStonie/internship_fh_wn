@@ -1,5 +1,5 @@
 from sqlalchemy import Table, Column, Integer, BLOB, String, ForeignKey, UniqueConstraint, BOOLEAN, \
-    ForeignKeyConstraint, event
+    ForeignKeyConstraint, event, Float
 from sqlalchemy.orm import declarative_base, relationship, backref
 from flask_login import UserMixin
 from sqlalchemy import event
@@ -231,10 +231,10 @@ class Peak(Base):
     __tablename__ = 'peaks'
     id = Column(Integer, primary_key=True)
     spectrum_id = Column(Integer, ForeignKey('spectra.id'), nullable=False)
-    wavenumber = Column(Integer, nullable=False)
+    wavenumber = Column(Float, nullable=False)
     intensity_id = Column(Integer, ForeignKey('intensities.id'), nullable=False)
 
-    spectrum = relationship("Spectrum", backref="peaks")
+    spectrum = relationship("Spectrum", backref="peaks", passive_deletes='all')
     intensity = relationship("Intensity", backref="peaks")
 
     __table_args__ = (

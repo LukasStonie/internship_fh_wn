@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-3 content">
+
+    {% include 'includes/backToStart.html' %}
+    {% include 'includes/errors.html' %}
+    <div class="row">
+        <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+            <h1>Erstellen <b><em>Abfrage</em></b></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <p>Geben Sie eine bzw. mehrere Wellenzahle(n) und einen Toleranzbereich ein,
+                um eine Abfrage zu starten. Die angegebenen Wellenzahlen werden nicht mittels einer UND-Verknüpfung
+                verbunden.
+                Es werden Ergebnisse präsentiert, die mindestens eine der angegebenen Wellenzahlen enthalten.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form method="POST" novalidate>
+                {{ form.csrf_token}}
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="{{form.tolerance.id}}" class="form-label">Toleranzbereich [cm<sup>-1</sup>]</label>
+                        {{form.tolerance(class="form-control")}}
+                    </div>
+                </div>
+                <div id="wavenumbers" class="row">
+                    <div class="col-md-6 mb-2">
+                        <label for="wn-0" class="form-label">Wellenzahl [cm<sup>-1</sup>]</label>
+                        <input type="number" class="form-control" id="wn-0" name="wn-0">
+                    </div>
+                </div>
+
+                <button type="button" id="add-wavenumber-field" class="btn btn-outline-success btn-sm mt-2"><i
+                        class="bi bi-plus-lg"></i> Wellenzahl
+                </button>
+                <br>
+                <button type="submit" class="btn btn-primary mt-3">Abfragen</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function () {
+        let addWavenumberFieldBtn = document.getElementById('add-wavenumber-field');
+        addWavenumberFieldBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            let allWavenumberFieldWrapper = document.getElementById('wavenumbers');
+            let allWavenumbersField = allWavenumberFieldWrapper.getElementsByTagName('input');
+
+            let wavenumberInputIds = []
+            for (let i = 0; i < allWavenumbersField.length; i++) {
+                wavenumberInputIds.push(parseInt(allWavenumbersField[i].name.split('-')[1]));
+            }
+            let newFieldName = `wn-${Math.max(...wavenumberInputIds) + 1}`;
+            allWavenumberFieldWrapper.insertAdjacentHTML('beforeend', `
+                <div class="col-md-6">
+                    <label for="${newFieldName}" class="form-label">Wellenzahl [cm<sup>-1</sup>]</label>
+                    <input id="${newFieldName}" type="number" class="form-control" name="${newFieldName}">
+                </div>
+            `);
+        });
+    }
+</script>
+{% endblock %}
+
+

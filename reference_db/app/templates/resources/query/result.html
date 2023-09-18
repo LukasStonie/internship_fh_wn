@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-3 content">
+
+    <a class="icon-link icon-link-hover mb-2"
+       style="--bs-icon-link-transform: translate3d(-.125rem, 0, 0); --bs-link-color-rgb: 97,100,102;"
+       href="{{ url_for('query.query') }}">
+        <i class="bi bi-arrow-left mb-auto"></i>
+        Zurück
+    </a>
+    {% include 'includes/errors.html' %}
+    <div class="row">
+        <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+            <h1>Ergebnis <b><em>Abfrage</em></b></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <p>Die Abfrage führt zu {{cnt}} Ergebnissen</p>
+            {% if cnt > 0 %}
+            {% for wn in result %}
+            <div class="card my-2">
+                <div class="card-header">
+                   Suchkriterium {{wn}} cm<sup>-1</sup> bei Toleranz von <span>&#177;</span> {{tolerance}} cm<sup>-1</sup>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for result in result[wn] %}
+                    <li class="list-group-item"> Treffer bei: {{result.exact_wavenumber}} cm<sup>-1</sup> ({{result.intensity}}) -
+
+                        <a class="link-primary"
+                                           href="{{url_for('compounds.show', compound_id=result.compound_id)}}">
+                            {{result.compound}}
+                        </a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

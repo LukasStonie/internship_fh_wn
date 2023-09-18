@@ -77,4 +77,7 @@ def create_app(config_class=Config):
     from app.routes.peaks import bp as peaks_bp
     app.register_blueprint(peaks_bp, url_prefix='/peaks')
 
+    from app.routes.query import bp as query_bp
+    app.register_blueprint(query_bp, url_prefix='/query')
+
     return app

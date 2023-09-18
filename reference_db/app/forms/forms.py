@@ -4,6 +4,7 @@ from wtforms import (StringField, TextAreaField, IntegerField, BooleanField,
                      RadioField, PasswordField, SelectField, SelectMultipleField, SubmitField, FieldList, FormField)
 from wtforms.fields.html5 import EmailField, DecimalField
 from wtforms.validators import InputRequired, Length, Email, EqualTo
+from app.extensions import db
 
 
 class SignupForm(FlaskForm):
@@ -114,14 +115,15 @@ class IntensityForm(FlaskForm):
 
 
 class WaveNumberIntensityPairForm(FlaskForm):
-
     wavenumber = IntegerField('Wellenzahl [cm<sup>-1</sup>]', default=3,
                               validators=[InputRequired(message='Bitte geben Sie eine Wellenzahl an')])
     intensity = SelectField('Intensity', validate_choice=False,
-                              validators=[InputRequired(message='Bitte wählen Sie eine Intensity aus')], choices=[(1,"Penis")])
+                            validators=[InputRequired(message='Bitte wählen Sie eine Intensity aus')],
+                            choices=[(1, "Test")])
 
     def __str__(self):
         return f"wavenumber: {self.wavenumber.data}"
+
 
 class PeakForm(FlaskForm):
     """wavenumber = IntegerField('Wellenzahl [cm<sup>-1</sup>]', default=3,
@@ -130,4 +132,12 @@ class PeakForm(FlaskForm):
                             validators=[InputRequired(message='Bitte wählen Sie eine Intensity aus')],
                             choices=[(1, "Penis")])"""
 
-    peaks = FieldList(FormField(WaveNumberIntensityPairForm))
+    # peaks = FieldList(FormField(WaveNumberIntensityPairForm))
+    intensities = SelectField("Intensität", validate_choice=False,
+                              validators=[InputRequired(message="Bitte wählen Sie eine Intesität aus.")])
+
+
+class QueryForm(FlaskForm):
+    tolerance = DecimalField("Toleranz", default=10.0,
+                             validators=[InputRequired(message="Bitte geben Sie einen Toleranzbereich an.")])
+    wavenumbers = FieldList(DecimalField("Wellenzahl", default=1.0))

@@ -11,7 +11,7 @@ from app.external_libs.raman_lib.preprocessing import PeakPicker
 from app.forms.forms import SpectraForm, SpectraEditForm
 from config import Config
 from app.routes.spectra import bp
-from app.models.model import Spectrum, SpectrumType, PreprocessingSteps
+from app.models.model import Spectrum, SpectrumType, PreprocessingSteps, Peak
 from app.extensions import db
 from scipy.signal import find_peaks
 import numpy as np
@@ -129,6 +129,8 @@ def new_post(compound_id):
 @login_required
 def edit(spectrum_id):
     spectrum = db.session.query(Spectrum).filter(Spectrum.id == spectrum_id).first()
+    if  spectrum.spectrum_type_id == 3:
+        return redirect(url_for("peaks.edit", spectrum_id=spectrum_id))
     preprocessing_steps = db.session.query(PreprocessingSteps).all()
     spectrum_types = db.session.query(SpectrumType).all()
     form = SpectraEditForm()
@@ -206,9 +208,12 @@ def edit_post(spectrum_id):
 def delete(spectrum_id):
     spectrum = db.session.query(Spectrum).filter(Spectrum.id == spectrum_id).first()
     compound_id = spectrum.compound_id
-    remove_spectrum(spectrum.file_path)
+    # delete all
+    db.session.query(Peak).filter(Peak.spectrum_id == spectrum_id).delete()
     # remove spectrum from db
     db.session.delete(spectrum)
+    # remove spectrum from filesystem
+    remove_spectrum(spectrum.file_path)
     db.session.commit()
     flash("Spektrum wurde gelöscht", 'success')
     return redirect(url_for('compounds.show', compound_id=compound_id))
