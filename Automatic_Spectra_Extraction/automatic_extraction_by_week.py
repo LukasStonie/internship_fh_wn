@@ -10,8 +10,9 @@ def parse_date(date):
     tmp = date.strftime("%y_%m_%d")
     return tmp
 
+
 def copy_file_and_rename(file, week_number):
-    #get information from path
+    # get information from path
     properties = file.split("/")
     substrate = properties[0]
     state = properties[1]
@@ -22,7 +23,8 @@ def copy_file_and_rename(file, week_number):
 
     source_file = SOURCE_DIR + "/" + file
     file_exists = os.path.isfile(source_file)
-    destination_folder = TARGET_DIR + "/" + substrate + "/" + state + "/" + time+"/"+week_number
+    # destination_folder = TARGET_DIR + "/" + substrate + "/" + state + "/"+ week_number + "/"  + time
+    destination_folder = TARGET_DIR + "/" + substrate + "/" + week_number + "/" + time + "/" + state
     destination_file = destination_folder + "/" + date + "_" + directory + "_" + file_name
 
     try:
@@ -39,9 +41,11 @@ def get_creation_date(file_path):
     date_str = file_path.split("/")[3]
     return datetime.strptime(date_str, '%y_%m_%d')
 
+
 def get_calendar_week(date):
     # get calendar week from date
     return date.strftime('%W')
+
 
 EXCEL_FILE = "/Users/Praktikum/Desktop/Quality_Spectra.xlsx"
 
@@ -50,7 +54,7 @@ TIME = ["Start", "End"]
 STATE = ["Induced", "Non_Induced"]
 
 SOURCE_DIR = "/Users/Praktikum/Documents/E_Coli/Steininger_E_Coli_Messung"
-TARGET_DIR = "/Users/Praktikum/Documents/E_Coli/Steininger_E_Coli_By_Substrate_State_Week"
+TARGET_DIR = "/Users/Praktikum/Documents/E_Coli/Steininger_E_Coli_Week_Compare_State_Time"
 
 for substrate in SUBSTRATES:
     df = pd.read_excel(EXCEL_FILE, substrate)  # read sheet
@@ -58,18 +62,19 @@ for substrate in SUBSTRATES:
     # create empty list for file paths
     file_paths = []
 
-
-
     # fill list with file paths
     for index, row in df_filtered.iterrows():
-        file_paths.append(substrate + "/" + row["State"] +"/"+ row["Time"] + "/" + parse_date(row["Date"]) + "/" + str(
-            row["Directory"]) + "/" + row["File"])
+        file_paths.append(
+            substrate + "/" + row["State"] + "/" + row["Time"] + "/" + parse_date(row["Date"]) + "/" + str(
+                row["Directory"]) + "/" + row["File"])
 
     # group files by week
     grouped_files = {}
     for file_path in file_paths:
-        creation_date = get_creation_date(file_path) # parse the date from the file name
+        creation_date = get_creation_date(file_path)  # parse the date from the file name
         week_start = get_calendar_week(creation_date)  # get the calendar week from the date
+        if creation_date.weekday() == 0 or creation_date.weekday() == 1:
+            week_start = int(week_start) - 1
         if week_start in grouped_files:
             grouped_files[week_start].append(file_path)
         else:
@@ -77,6 +82,4 @@ for substrate in SUBSTRATES:
     print(grouped_files.keys())
     for week, files in grouped_files.items():
         for file in files:
-            e = 0
-           # copy_file_and_rename(file, week)
-
+            copy_file_and_rename(file, str(week))
