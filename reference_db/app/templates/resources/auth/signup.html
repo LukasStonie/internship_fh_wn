@@ -75,14 +75,12 @@
                         {{form.password_repeat.label(class="form-label")}}
                         {{form.password_repeat(class="form-control", type="password")}}
                         {% if form.password_repeat.errors %}
-                        <div class="alert alert-danger my-1" role="alert">
-                            <ul>
-                                {% for error in form.password_repeat.errors %}
-                                <li>
-                                    {{ error }}
-                                </li>
-                                {% endfor %}
-                            </ul>
+                        <div class="alert alert-danger my-3" role="alert">
+                            {% for error in form.password_repeat.errors %}
+                            <p class="mb-0">
+                                {{ error }}
+                            </p>
+                            {% endfor %}
                         </div>
                         {% endif %}
                     </div>

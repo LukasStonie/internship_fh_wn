@@ -1,3 +1,5 @@
+import os
+
 import sqlalchemy.exc
 from flask import render_template, request, url_for, flash, redirect
 from flask_login import login_required, current_user
@@ -135,11 +137,28 @@ def edit_post(compound_id):
 @bp.route('/<compound_id>/delete')
 @login_required
 def delete(compound_id):
-    compound = db.session.query(Compound).filter(Compound.id == compound_id).first()
-    db.session.delete(compound)
-    db.session.commit()
-    flash("Substanz wurde gelöscht", 'success')
-    return redirect(url_for('compounds.index'))
+    try:
+        compound = db.session.query(Compound).filter(Compound.id == compound_id).first()
+        # delete all csv and png files stored on the server
+        spectra = db.session.query(Spectrum).filter(Spectrum.compound_id == compound_id).all()
+        for spectrum in spectra:
+            remove_spectrum(spectrum.file_path)
+
+        # delete compound, and through cascade, all spectra and peaks
+        db.session.delete(compound)
+        db.session.commit()
+        flash("Substanz wurde gelöscht", 'success')
+        return redirect(url_for('compounds.index'))
+    except Exception as e:
+        print(e)
+        flash("Substanz konnte nicht gelöscht werden. Probieren Sie es später erneut.", 'danger')
+        return redirect(url_for('compounds.index'))
+
+
+def remove_spectrum(file_path):
+    os.remove(file_path)  # remove csv
+    os.remove(file_path.replace('.csv', '.png'))  # remove plot
+    return
 
 
 @bp.route('/<compound_id>/show')
@@ -158,7 +177,8 @@ def show(compound_id):
         'spectra_type': db.session.query(SpectrumType).all(),
         'preprocessing_steps': db.session.query(PreprocessingSteps).all()
     }
-    spectra = db.session.query(Spectrum).filter(Spectrum.compound_id == compound_id).all()
+    spectra = db.session.query(Spectrum).filter(Spectrum.compound_id == compound_id).order_by(
+        Spectrum.spectrum_type_id.asc()).all()
     for i in spectra:
         print(i.preprocessing_steps)
     plots = {}

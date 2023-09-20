@@ -70,9 +70,9 @@ def edit_post(substrate_id):
     # if the form is valid, create a new slide and redirect to the index page
     else:
         # if unique constraint is violated, inform the user
+        substrate = db.session.query(Substrate).filter(Substrate.id == substrate_id).first()
         try:
             has_file = len(request.files) != 0 and request.files['instructions'] is not None
-            substrate = db.session.query(Substrate).filter(Substrate.id == substrate_id).first()
 
             substrate.name = form.name.data
             if has_file:
@@ -82,7 +82,8 @@ def edit_post(substrate_id):
             return redirect(url_for('substrates.index'))
         except sqlalchemy.exc.IntegrityError:
             flash('Diese Bezeichnung existiert bereits', 'danger')
-            return render_template('resources/substrates/edit.html', form=form)
+            db.session.rollback()
+            return render_template('resources/substrates/edit.html', form=form, substrate=substrate)
 
 
 @bp.route('/<substrate_id>/delete', methods=['GET', 'POST'])

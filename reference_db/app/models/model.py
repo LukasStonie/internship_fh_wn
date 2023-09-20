@@ -174,6 +174,8 @@ class Spectrum(Base):
     # block deletion of coresponding rows in other tables when used in a spectrum
     spectrum_type = relationship("SpectrumType", backref="spectra", passive_deletes='all')
 
+    # delete all linked peaks when a spectrum is deleted
+    peaks = relationship("Peak", backref="spectrum", cascade="all, delete-orphan")
     __table_args__ = (
         UniqueConstraint('file_path', name='u_file_path'),
     )
@@ -234,7 +236,7 @@ class Peak(Base):
     wavenumber = Column(Float, nullable=False)
     intensity_id = Column(Integer, ForeignKey('intensities.id'), nullable=False)
 
-    spectrum = relationship("Spectrum", backref="peaks", passive_deletes='all')
+    # spectrum = relationship("Spectrum", backref="peaks",)
     intensity = relationship("Intensity", backref="peaks")
 
     __table_args__ = (
@@ -275,6 +277,10 @@ class Compound(Base):
     aperture = relationship("Aperture", backref="compound", passive_deletes='all')
 
     substrate = relationship("Substrate", backref="compound")
+
+    __table_args__ = (
+        UniqueConstraint('name', name='u_name'),
+    )
 
     def __repr__(self):
         return f'<Compound "{self.name}">'

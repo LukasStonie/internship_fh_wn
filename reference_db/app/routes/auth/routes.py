@@ -24,7 +24,7 @@ def signup_post():
     if user:
         flash('Diese E-Mail-Adresse ist bereits vergeben', 'danger')
         form_ok = False
-        return redirect(url_for('auth.signup', form=form))
+        return render_template('resources/auth/signup.html', form=form)
 
     # if the form is not valid, redirect to the signup page
     if not form.validate():
@@ -65,7 +65,7 @@ def login_post():
 
     # if the user does not exist or the password is wrong, redirect to the login page
     if not user or not check_password_hash(user.password_hash, form.password.data):
-        flash('Bitte überprüfen Sie ihre Eingaben', 'danger')
+        flash('Bitte überprüfen Sie ihre Eingaben. E-Mail und Passwort stimmen nicht überein    ', 'danger')
         return render_template('resources/auth/login.html', form=form)
 
     # if the user exists and the password is correct, log the user in

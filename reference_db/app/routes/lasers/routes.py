@@ -69,7 +69,7 @@ def edit_post(laser_id):
             return redirect(url_for('lasers.index'))
         except sqlalchemy.exc.IntegrityError:
             flash('Diese Wellenlänge existiert bereits', 'danger')
-            return render_template('resources/lasers/edit', form=form)
+            return render_template('resources/lasers/edit.html', form=form)
 
 
 @bp.route('/<laser_id>/delete')

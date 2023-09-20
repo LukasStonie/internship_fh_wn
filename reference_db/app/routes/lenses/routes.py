@@ -73,7 +73,7 @@ def edit_post(lens_id):
             return redirect(url_for('lenses.index'))
         except sqlalchemy.exc.IntegrityError:
             flash('Diese Kombination aus Zoom und numerischer Apertur existiert bereits', 'danger')
-            render_template('resources/lenses/edit.html', form=form)
+            return render_template('resources/lenses/edit.html', form=form)
 
 
 @bp.route('/<lens_id>/delete')
