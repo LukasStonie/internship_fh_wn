@@ -70,7 +70,7 @@ def login_post():
 
     # if the user exists and the password is correct, log the user in
     login_user(user, remember=True)
-    return redirect(url_for('main.index'))
+    return url_for('main.index')
 
 
 @bp.route('/logout/')

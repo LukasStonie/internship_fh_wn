@@ -21,6 +21,8 @@ def create_app(config_class=Config):
     from flask_login import LoginManager
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
+    login_manager.login_message = "Sie müssen sich anmelden, um diese Seite zu sehen."
+    login_manager.login_message_category = "danger"
     login_manager.init_app(app)
 
     from app.models.model import User
