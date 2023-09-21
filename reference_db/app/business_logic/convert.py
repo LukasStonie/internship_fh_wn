@@ -9,6 +9,16 @@ from app.external_libs.raman_lib.preprocessing import PeakPicker
 
 
 def spectrum_to_df(file: FileStorage) -> pd.DataFrame:
+    """
+        Reads the contents of a file and returns the spectral data. Based on the type of the file, the function uses different methods to read the file. CSV, DPT, TSV and TXT files are read using numpy.loadtxt. OPUS files are read using the convert_opus function from app.external_libs.raman_lib.opus_converter
+
+    Args:
+        file (FileStorage): uploaded file
+
+    Returns:
+        pd.DataFrame: ready to use spectral data with wavenumbers as index and intensities as values
+    """
+
     with tempfile.NamedTemporaryFile() as temp:
         file.save(temp.name)
         if file.filename.lower().endswith(".csv") or \

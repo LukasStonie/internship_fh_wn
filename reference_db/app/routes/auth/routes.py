@@ -10,12 +10,26 @@ from flask_login import login_user, logout_user, login_required
 
 @bp.route('/signup/', methods=['GET'])
 def signup():
+    """
+        Signup page for users
+
+    Returns:
+        rendered template of the signup page, with the form for creating a new user
+    """
     form = SignupForm()
     return render_template('resources/auth/signup.html', form=form)
 
 
 @bp.route('/signup/', methods=['POST'])
 def signup_post():
+    """
+        Creates a new user
+
+    Returns:
+        based on the validation of the form, either redirects to the login page or
+        renders the signup page again with validation errors (WTForms) or integrity errors (SQL constraints)
+
+    """
     # convert request.form to form object
     form = SignupForm(request.form)
 
@@ -44,12 +58,26 @@ def signup_post():
 
 @bp.route('/login/', methods=['GET'])
 def login():
+    """
+        Login page for users
+
+    Returns:
+        rendered template of the login page, with the form for logging in
+    """
     form = LoginForm()
     return render_template('resources/auth/login.html', form=form)
 
 
 @bp.route('/login/', methods=['POST'])
 def login_post():
+    """
+        Logs the user in
+
+    Returns:
+        based on the validation of the form, either redirects to this resources index page or
+        renders the login page again with validation errors (WTForms), if the user does not exist or the password is wrong
+        or the user is not allowed to login (not activated yet)
+    """
     form = LoginForm(request.form)
 
     # check if the user exists
@@ -76,5 +104,11 @@ def login_post():
 @bp.route('/logout/')
 @login_required
 def logout():
+    """
+        Logs the user out, only accessible for logged in users
+
+    Returns:
+        redirects to the index page
+    """
     logout_user()
     return redirect(url_for('main.index'))

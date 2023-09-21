@@ -11,6 +11,13 @@ from app.extensions import db
 @bp.route('/')
 @login_required
 def index():
+    """
+        Index page for preprocessing_steps, only accessible for logged in users. Allowing the user to add, edit and delete prprocessing_steps
+        
+    Returns:
+        rendered template of the index page, with all the preprocessing_steps
+        allowing the user to add, edit and delete preprocessing_steps
+    """
     preprocessing_steps = db.session.query(PreprocessingSteps).all()
     return render_template('resources/preprocessing_steps/index.html', preprocessing_steps=preprocessing_steps)
 
@@ -18,6 +25,12 @@ def index():
 @bp.route('/new', methods=['GET'])
 @login_required
 def new():
+    """
+        Create page for preprocessing_steps, only accessible for logged in users
+        
+    Returns:
+        rendered template of the new page, with the form for creating a new preprocessing_step
+    """
     form = PreprocessingStepsForm()
     return render_template('resources/preprocessing_steps/new.html', form=form)
 
@@ -25,6 +38,13 @@ def new():
 @bp.route('/new', methods=['POST'])
 @login_required
 def new_post():
+    """
+        Creates a new preprocessing_step, only accessible for logged in users
+        
+    Returns:
+        based on the validation of the form, either redirects to this resources index page or 
+        renders the Create page again with validation errors (WTForms) or integrity errors (SQL constraints)
+    """
     # convert request.form to form object
     form = PreprocessingStepsForm(request.form)
     # if the form is not valid, redirect to the new page and pass the values from the form
@@ -46,6 +66,15 @@ def new_post():
 @bp.route('/<preprocessing_step_id>/edit', methods=['GET'])
 @login_required
 def edit(preprocessing_step_id):
+    """
+        Edit page for preprocessing_steps, only accessible for logged in users
+        
+    Args:
+        preprocessing_step_id (int): id of the preprocessing_step to be edited
+
+    Returns:
+        rendered template of the edit page, with the form for editing a preprocessing_step
+    """
     preprocessing_step = db.session.query(PreprocessingSteps).filter(
         PreprocessingSteps.id == preprocessing_step_id).first()
     form = PreprocessingStepsForm(obj=preprocessing_step)
@@ -55,6 +84,16 @@ def edit(preprocessing_step_id):
 @bp.route('/<preprocessing_step_id>/edit', methods=['POST'])
 @login_required
 def edit_post(preprocessing_step_id):
+    """
+        Edits the preprocessing_step, only accessible for logged in users
+        
+    Args:
+        preprocessing_step_id (int): id of the preprocessing_step to be edited
+
+    Returns:
+        based on the validation of the form, either redirects to this resources index page or 
+        renders the Edit page again with validation errors (WTForms) or integrity errors (SQL constraints)
+    """
     # convert request.form to form object
     form = PreprocessingStepsForm(request.form)
     # if the form is not valid, redirect to the new page and pass the values from the form
@@ -76,6 +115,15 @@ def edit_post(preprocessing_step_id):
 @bp.route('/<preprocessing_step_id>/delete', methods=['GET', 'POST'])
 @login_required
 def delete(preprocessing_step_id):
+    """
+        Deletes the preprocessing_step if not used in spectrum, only accessible for logged in users
+        
+    Args:
+        preprocessing_step_id (int): id of the preprocessing_step to be deleted
+
+    Returns:
+        redirects to the index page with a flash message based on the success of the deletion
+    """
     try:
         preprocessing_step = db.session.query(PreprocessingSteps).filter(
             PreprocessingSteps.id == preprocessing_step_id).first()

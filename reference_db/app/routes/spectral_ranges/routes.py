@@ -11,6 +11,12 @@ from app.extensions import db
 @bp.route('/')
 @login_required
 def index():
+    """
+        Index page for spectral_ranges, only accessible for logged in users. Allowing the the user to add, edit and delete spectral_ranges
+
+    Returns:
+        rendered template of the index page, with all the spectral_ranges
+    """
     spectral_ranges = db.session.query(SpectralRange).all()
     return render_template('resources/spectral_ranges/index.html', spectral_ranges=spectral_ranges)
 
@@ -18,6 +24,12 @@ def index():
 @bp.route('/new', methods=['GET'])
 @login_required
 def new():
+    """
+        Create page for spectral_ranges, only accessible for logged in users
+
+    Returns:
+        rendered template of the new page, with the form for creating a new spectral_range
+    """
     form = SpectralRangesForm()
     return render_template('resources/spectral_ranges/new.html', form=form)
 
@@ -25,6 +37,14 @@ def new():
 @bp.route('/new', methods=['POST'])
 @login_required
 def new_post():
+    """
+        Creates a new spectral_range if form is valid, only accessible for logged in users
+
+    Returns:
+        based on the validation of the form, either redirects to this resources index page or
+        renders the Create page again with validation errors (WTForms) or integrity errors (SQL constraints)
+    """
+
     # convert request.form to form object
     form = SpectralRangesForm(request.form)
     # if the form is not valid, redirect to the new page and pass the values from the form
@@ -46,6 +66,17 @@ def new_post():
 @bp.route('/<spectral_range_id>/edit', methods=['GET'])
 @login_required
 def edit(spectral_range_id):
+    """
+        Edit page for spectral_ranges, only accessible for logged in users
+
+    Args:
+        spectral_range_id (int): id of the spectral_range to be edited
+
+    Returns:
+        rendered template of the edit page, with the form for editing the spectral_range
+    """
+
+    # get the spectral_range from the database and populate the form with its values
     spectral_range = db.session.query(SpectralRange).filter(SpectralRange.id == spectral_range_id).first()
     form = SpectralRangesForm(obj=spectral_range)
     return render_template('resources/spectral_ranges/edit.html', form=form)
@@ -54,6 +85,16 @@ def edit(spectral_range_id):
 @bp.route('/<spectral_range_id>/edit', methods=['POST'])
 @login_required
 def edit_post(spectral_range_id):
+    """
+        Edits the spectral_range if form is valid, only accessible for logged in users
+
+    Args:
+        spectral_range_id (int): id of the spectral_range to be edited
+
+    Returns:
+        based on the validation of the form, either redirects to this resources index page or
+        renders the Edit page again with validation errors (WTForms) or integrity errors (SQL constraints)
+    """
     # convert request.form to form object
     form = SpectralRangesForm(request.form)
     # if the form is not valid, redirect to the new page and pass the values from the form
@@ -76,6 +117,15 @@ def edit_post(spectral_range_id):
 @bp.route('/<spectral_range_id>/delete')
 @login_required
 def delete(spectral_range_id):
+    """
+        Deletes the spectral_range if not used in a compound, only accessible for logged in users
+
+    Args:
+        spectral_range_id (int): id of the spectral_range to be deleted
+
+    Returns:
+       redirects to the index page, with a flash message based on the success of the deletion
+    """
     try:
         spectral_range = db.session.query(SpectralRange).filter(SpectralRange.id == spectral_range_id).first()
         db.session.delete(spectral_range)

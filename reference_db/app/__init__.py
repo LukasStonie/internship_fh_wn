@@ -5,6 +5,17 @@ from flask_babel import Babel
 
 
 def create_app(config_class=Config):
+    """
+    Creates the flask app instance, initializes the extensions (flask_login, flask_babel, flask_wtforms)
+    and registers the blueprints.
+
+    Args:
+        config_class (custom Config class):
+
+    Returns:
+        flask app instance used for starting the server
+    """
+
     app = Flask(__name__)
     babel = Babel(app)
     app.config['BABEL_DEFAULT_LOCALE'] = 'de'

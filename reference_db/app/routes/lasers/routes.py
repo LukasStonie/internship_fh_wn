@@ -11,6 +11,13 @@ from flask_login import login_required, current_user
 @bp.route('/')
 @login_required
 def index():
+    """
+        Index page for lasers, only accessible for logged in users. Allowing the user to add, edit and delete lasers
+
+    Returns:
+        rendered template of the index page, with all the lasers
+        allowing the user to add, edit and delete lasers
+    """
     lasers = db.session.query(Laser).all()
     return render_template('resources/lasers/index.html', lasers=lasers, name=current_user)
 
@@ -18,6 +25,12 @@ def index():
 @bp.route('/new', methods=['GET'])
 @login_required
 def new():
+    """
+        Create page for lasers, only accessible for logged in users
+
+    Returns:
+        rendered template of the new page, with the form for creating a new laser
+    """
     form = LasersForm()
     return render_template('resources/lasers/new.html', form=form)
 
@@ -25,6 +38,13 @@ def new():
 @bp.route('/new', methods=['POST'])
 @login_required
 def new_post():
+    """
+        Creates a new laser, only accessible for logged in users
+
+    Returns:
+        based on the validation of the form, either redirects to this resources index page or
+        renders the Create page again with validation errors (WTForms) or integrity errors (SQL constraints)
+    """
     # convert request.form to form object
     form = LasersForm(request.form)
     # if the form is not valid, redirect to the new page and pass the values from the form
@@ -46,6 +66,15 @@ def new_post():
 @bp.route('/<laser_id>/edit', methods=['GET'])
 @login_required
 def edit(laser_id):
+    """
+        Edit page for lasers, only accessible for logged in users
+
+    Args:
+        laser_id (int): id of the laser to be edited
+
+    Returns:
+        rendered template of the edit page, with the form for editing a laser
+    """
     laser = db.session.query(Laser).filter(Laser.id == laser_id).first()
     form = LasersForm(obj=laser)
     return render_template('resources/lasers/edit.html', form=form)
@@ -54,6 +83,16 @@ def edit(laser_id):
 @bp.route('/<laser_id>/edit', methods=['POST'])
 @login_required
 def edit_post(laser_id):
+    """
+        Edits the laser, only accessible for logged in users
+
+    Args:
+        laser_id (int): id of the laser to be edited
+
+    Returns:
+        based on the validation of the form, either redirects to this resources index page or
+        renders the Edit page again with validation errors (WTForms) or integrity errors (SQL constraints)
+    """
     # convert request.form to form object
     form = LasersForm(request.form)
     # if the form is not valid, redirect to the new page and pass the values from the form
@@ -75,6 +114,15 @@ def edit_post(laser_id):
 @bp.route('/<laser_id>/delete')
 @login_required
 def delete(laser_id):
+    """
+        Deletes the laser if not used in a compound, only accessible for logged in users
+
+    Args:
+        laser_id (int): id of the laser to be deleted
+
+    Returns:
+        redirects to the index page, with a flash message based on the success of the deletion
+    """
     try:
         laser = db.session.query(Laser).filter(Laser.id == laser_id).first()
         db.session.delete(laser)

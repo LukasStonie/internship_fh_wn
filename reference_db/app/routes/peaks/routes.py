@@ -11,7 +11,7 @@ import pandas as pd
 from wtforms import FormField, FieldList, IntegerField, SelectField
 from wtforms.validators import InputRequired
 
-from app.forms.forms import PeakForm, WaveNumberIntensityPairForm
+from app.forms.forms import PeakForm
 from app.routes.peaks import bp
 
 from app.models.model import Peak, Spectrum, Intensity
@@ -20,6 +20,15 @@ from app.extensions import db
 
 
 def peak_exists(compound_id):
+    """
+        Checks if a peak spectrum already exists for a given compound
+
+    Args:
+        compound_id (int): id of the compound to check for
+
+    Returns:
+        True if a peak spectrum already exists, False otherwise
+    """
     spectrum_type_peak = 3
     # check if peak spectrum already exists
     peak_spectrum = db.session.query(Spectrum).filter(Spectrum.compound_id == compound_id).filter(
@@ -31,6 +40,15 @@ def peak_exists(compound_id):
 
 
 def create_plot(peaks):
+    """
+        Creates a plot of the peaks with wavenumber on the x-axis and intensity on the y-axis, plot is stored in the plt object
+
+    Args:
+        peaks (np.array): two-dimensional numpy array with wavenumber and intensity
+
+    Returns:
+        None, plot is stored in the plt object
+    """
     # plot peaks_array
     plt.plot(peaks[:, 0], peaks[:, 1])
     # describe axis
@@ -39,6 +57,16 @@ def create_plot(peaks):
 
 
 def get_wavenumbers_and_img(compound_id):
+    """
+        Gets the wavenumbers of the peaks and the plot of the peak spectrum with the highest id for a given compound (latest added peak spectrum)
+
+    Args:
+        compound_id (int): id of the compound to get the peak spectrum for
+
+    Returns:
+        wavenumbers (np.array): one-dimensional numpy array with the wavenumbers of the peaks
+        img (base64): base64 encoded image of the plot
+    """
     # get the spectrum with the highest id
     spectrum = db.session.query(Spectrum).filter(Spectrum.compound_id == compound_id).order_by(
         Spectrum.id.desc()).first()
@@ -74,6 +102,16 @@ def get_wavenumbers_and_img(compound_id):
 @bp.route('/new/<compound_id>', methods=['GET'])
 @login_required
 def new(compound_id):
+    """
+        Create page for peaks, only accessible for logged in users
+
+    Args:
+        compound_id (int): id of the compound to create a peak spectrum for
+
+    Returns:
+        if a peak spectrum already exists for the given compound, redirects to the show page of the compound with error message
+        otherwise, renders the page for creating a new peak spectrum
+    """
     # check if peak spectrum already exists
     if peak_exists(compound_id):
         return redirect(url_for('compounds.show', compound_id=compound_id))
@@ -92,13 +130,31 @@ def new(compound_id):
 
 
 def get_form_data(form):
-    print(form)
+    """
+        Gets the intensity-classification of every peak from the form and returns it as a dictionary
+
+    Args:
+        form (request.form): a dictionary-like object containing the form data
+
+    Returns:
+        data (dict): a dictionary with the wavenumber as key and the intensity-classification as value
+    """
     # get evey key-value pair from the form where the key contains '_intensity'
     data = {float(k.rstrip("_intensity")): v for k, v in form.items() if '_intensity' in k}
     return data
 
 
 def create_spectrum_and_peaks(compound_id, data):
+    """
+        Creates a peak spectrum (csv and png) for the given compound, creates peaks which link the wavenumbers of the spectrum to the intensity
+
+    Args:
+        compound_id (int): id of the compound to create a peak spectrum for
+        data (dict): key-value pairs of the wavenumber and the intensity-classification
+
+    Returns:
+        None
+    """
     # create the peak spectrum and plot
     spectrum_type_peak = 3
     wavenumbers, img, filepath = get_wavenumbers_and_img(compound_id)
@@ -132,6 +188,17 @@ def create_spectrum_and_peaks(compound_id, data):
 @bp.route('/new/<compound_id>', methods=['POST'])
 @login_required
 def new_post(compound_id):
+    """
+        Creates a new peak spectrum for the given compound, only accessible for logged in users
+
+    Args:
+        compound_id (int): id of the compound to create a peak spectrum for
+
+    Returns:
+        redirects to the show page of the compound with a flash message based on the success of the deletion
+        no form validation, because the form is created dynamically and each wavenumber
+        is classified with the first intensity available by default and no field can be empty
+    """
     # check if peak spectrum already exists
     if peak_exists(compound_id):
         return redirect(url_for('compounds.show', compound_id=compound_id))
@@ -150,6 +217,15 @@ def new_post(compound_id):
 @bp.route('/edit/<spectrum_id>', methods=['GET'])
 @login_required
 def edit(spectrum_id):
+    """
+        Edit page for peaks, only accessible for logged in users
+
+    Args:
+        spectrum_id (int): id of the spectrum which links the peaks to be edited
+
+    Returns:
+        rendered template of the edit page, with the form for editing the peaks
+    """
     # get all peaks of the spectrum
     peaks = db.session.query(Peak).filter(Peak.spectrum_id == spectrum_id).all()
     form = PeakForm()
@@ -166,6 +242,17 @@ def edit(spectrum_id):
 @bp.route('/edit/<spectrum_id>', methods=['POST'])
 @login_required
 def edit_post(spectrum_id):
+    """
+        Edits the peaks corresponding to a peak spectrum, only accessible for logged in users
+
+    Args:
+        spectrum_id (int): id of the spectrum which links the peaks to be edited
+
+    Returns:
+        redirects to the show page of the compound with a flash message based on the success of the deletion
+        no form validation, because each wavenumber is already classified with an intensity and no field can be empty
+
+    """
     # read the form data
     data = get_form_data(request.form)
     try:
