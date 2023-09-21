@@ -155,8 +155,12 @@ def edit(spectrum_id):
     form = PeakForm()
     intensity_choices = db.session.query(Intensity).all()
     compound_id = db.session.query(Spectrum).filter(Spectrum.id == spectrum_id).first().compound_id
+    image_path = db.session.query(Spectrum).filter(Spectrum.id == spectrum_id).first().file_path.replace('.csv', '.png')
+    plot = None
+    with open(image_path, 'rb') as f:
+        plot= base64.b64encode(f.read()).lstrip(b'\n').decode('utf-8')
     return render_template('resources/peaks/edit.html', form=form, peaks=peaks, intensities=intensity_choices,
-                           compound_id=compound_id)
+                           compound_id=compound_id, plot=plot)
 
 
 @bp.route('/edit/<spectrum_id>', methods=['POST'])

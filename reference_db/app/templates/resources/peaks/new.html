@@ -16,22 +16,25 @@
         <div class="col-md-6">
             <form method="POST" novalidate>
                 {{ form.csrf_token}}
-                {% for wn in wavenumbers %}
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="{{wn}}" class="form-label">Wellenzahl [cm<sup>-1</sup>]</label>
-                        <input type="number" class="form-control" id="{{wn}}" value="{{wn}}" disabled>
+                <div class="overflow-scroll" style="height: 50vh">
+                    {% for wn in wavenumbers %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="{{wn}}" class="form-label">Wellenzahl [cm<sup>-1</sup>]</label>
+                            <input type="number" class="form-control" id="{{wn}}" value="{{wn}}" disabled>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{wn}}_intensity" class="form-label">Intensität</label>
+                            <select class="form-select" id="{{wn}}_intensity" name="{{wn}}_intensity">
+                                {% for intensity in intensities %}
+                                <option value="{{intensity.id}}">{{intensity.shorthand}} ({{intensity.description}})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label for="{{wn}}_intensity" class="form-label">Intensität</label>
-                        <select class="form-select" id="{{wn}}_intensity" name="{{wn}}_intensity">
-                            {% for intensity in intensities %}
-                            <option value="{{intensity.id}}">{{intensity.shorthand}} ({{intensity.description}})</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
                 <button type="submit" class="btn btn-primary mt-3">Speichern</button>
             </form>
         </div>

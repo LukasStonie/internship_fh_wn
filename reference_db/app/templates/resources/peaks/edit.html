@@ -16,22 +16,28 @@
         <div class="col-md-6">
             <form method="POST" novalidate>
                 {{ form.csrf_token}}
-                {% for peak in peaks %}
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="{{peak.wavenumber}}" class="form-label">Wellenzahl [cm<sup>-1</sup>]</label>
-                        <input type="number" class="form-control" id="{{peak.wavenumber}}" value="{{peak.wavenumber}}" disabled>
+                <div class="overflow-scroll" style="height: 50vh">
+                    {% for peak in peaks %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="{{peak.wavenumber}}" class="form-label">Wellenzahl [cm<sup>-1</sup>]</label>
+                            <input type="number" class="form-control" id="{{peak.wavenumber}}"
+                                   value="{{peak.wavenumber}}" disabled>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{peak.wavenumber}}_intensity" class="form-label">Intensität</label>
+                            <select class="form-select" id="{{peak.wavenumber}}_intensity"
+                                    name="{{peak.wavenumber}}_intensity">
+                                {% for intensity in intensities %}
+                                <option value="{{intensity.id}}" {% if peak.intensity_id== intensity.id %} selected {%
+                                        endif %}>{{intensity.shorthand}} ({{intensity.description}})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label for="{{peak.wavenumber}}_intensity" class="form-label">Intensität</label>
-                        <select class="form-select" id="{{peak.wavenumber}}_intensity" name="{{peak.wavenumber}}_intensity">
-                            {% for intensity in intensities %}
-                            <option value="{{intensity.id}}" {% if peak.intensity_id == intensity.id %} selected {% endif %}>{{intensity.shorthand}} ({{intensity.description}})</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
                 <button type="submit" class="btn btn-primary mt-3">Speichern</button>
             </form>
         </div>
