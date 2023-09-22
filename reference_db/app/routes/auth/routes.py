@@ -53,6 +53,7 @@ def signup_post():
     db.session.commit()
 
     # send the user to the login page
+    flash('Ihr Account wurde erfolgreich erstellt. Bitte warten Sie auf die Freischaltung durch einen Administrator.', 'success')
     return redirect(url_for('auth.login'))
 
 
