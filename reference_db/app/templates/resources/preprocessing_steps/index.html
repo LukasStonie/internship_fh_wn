@@ -7,7 +7,7 @@
     {% include 'includes/errors.html' %}
     <div class="row">
         <div class="col-12 col-md-8 d-flex align-items-center justify-content-start">
-            <h1>Übersicht <b><em>Vorbearbeitungsschritte</em></b></h1>
+            <h1>Übersicht <b><em>Vorverarbeitungsschritte</em></b></h1>
         </div>
         <div class="col-12 col-md-4 d-flex align-items-center justify-content-start justify-content-md-end">
             <a type="button" class="btn btn-outline-success btn-sm" href="{{ url_for('preprocessing_steps.new') }}"><i
@@ -17,7 +17,7 @@
         </div>
     </div>
     {% if preprocessing_steps|length<=0 %}
-    <h4>Es sind noch keine Vorbearbeitungsschritte hinterlegt</h4>
+    <h4>Es sind noch keine Vorverarbeitungsschritte hinterlegt</h4>
     {% else %}
 
     <table class="table">

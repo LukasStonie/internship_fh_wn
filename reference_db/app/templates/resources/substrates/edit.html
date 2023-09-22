@@ -18,7 +18,7 @@
             {{form.name(class="form-control", placeholder="Gold Nanopartikel")}}
             {% if form.name.errors %}
             <div class="alert alert-danger my-3" role="alert">
-                {% for error in form.description.errors %}
+                {% for error in form.name.errors %}
                 <p class="mb-0">
                     {{ error }}
                 </p>

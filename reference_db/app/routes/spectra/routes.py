@@ -103,7 +103,7 @@ def new(compound_id):
     """
     # get all spectrum types and preprocessing steps
     preprocessing_steps = db.session.query(PreprocessingSteps).all()
-    spectrum_types = db.session.query(SpectrumType).all()
+    spectrum_types = db.session.query(SpectrumType).filter(SpectrumType.id != 3).all()
 
     # create the form object
     form = SpectraForm()
@@ -133,7 +133,7 @@ def new_post(compound_id):
     form = SpectraForm(request.form)
     # get all spectrum types and preprocessing steps
     preprocessing_steps = db.session.query(PreprocessingSteps).all()
-    spectrum_types = db.session.query(SpectrumType).all()
+    spectrum_types = db.session.query(SpectrumType).filter(SpectrumType.id != 3).all()
 
     # add the choices to the form as tuples of (id, name)
     form.spectrum_type.choices = [(spectrum_type.id, spectrum_type.name) for spectrum_type in spectrum_types]
@@ -143,6 +143,13 @@ def new_post(compound_id):
     # get the preprocessing steps from request.form (form object can not handle multiple select fields)
     preprocessing_steps = [int(x) for x in request.form.getlist('step_check')]
     file = request.files['spectrum']
+
+    # check if the spectrum is preprocessed, that preprocessing steps are selected
+    if int(form.spectrum_type.data) == 2:
+        if preprocessing_steps == []:
+            flash('Bitte wählen Sie mindestens einen Vorverarbeitungsschritt aus', 'danger')
+            return render_template('resources/spectra/new.html', form=form, compound_id=compound_id)
+
     # check if the form is valid
     if not form.validate() or file.filename == '':
         flash('Bitte füllen Sie alle Felder einschließlich der Datei aus', 'danger')
@@ -200,7 +207,7 @@ def edit(spectrum_id):
 
     # get all spectrum types and preprocessing steps
     preprocessing_steps = db.session.query(PreprocessingSteps).all()
-    spectrum_types = db.session.query(SpectrumType).all()
+    spectrum_types = db.session.query(SpectrumType).filter(SpectrumType.id != 3).all()
 
     # create the form object
     form = SpectraEditForm()
@@ -237,7 +244,7 @@ def edit_post(spectrum_id):
 
     # get all spectrum types and preprocessing steps and add them to the form (is somehow empty in the form object)
     preprocessing_steps = db.session.query(PreprocessingSteps).all()
-    spectrum_types = db.session.query(SpectrumType).all()
+    spectrum_types = db.session.query(SpectrumType).filter(SpectrumType.id != 3).all()
 
     # add the choices to the form as lists of tuples of (id, name)
     form.spectrum_type.choices = [(spectrum_type.id, spectrum_type.name) for spectrum_type in spectrum_types]
@@ -254,6 +261,12 @@ def edit_post(spectrum_id):
     # map the ids to the actual objects for later use
     preprocessing_steps = db.session.query(PreprocessingSteps).filter(
         PreprocessingSteps.id.in_(preprocessing_step_ids)).all()
+
+    # check if the spectrum is preprocessed, that preprocessing steps are selected
+    if int(form.spectrum_type.data) == 2:
+        if preprocessing_steps == []:
+            flash('Bitte wählen Sie mindestens einen Vorverarbeitungsschritt aus', 'danger')
+            return render_template('resources/spectra/new.html', form=form, compound_id=spectrum.compound_id)
 
     # check if the form is valid
     if not form.validate():

@@ -62,6 +62,8 @@ def query_post():
         # get all matching peaks
         peaks = db.session.query(Peak).filter(
             Peak.wavenumber.between(wavenumber - tolerance, wavenumber + tolerance)).all()
+        if len(peaks) == 0:
+            continue
         result = []
         # transform the peaks into a dictionary for easier access in the template
         for peak in peaks:
