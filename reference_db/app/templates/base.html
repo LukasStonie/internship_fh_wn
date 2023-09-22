@@ -1,12 +1,16 @@
+<!-- base template for all pages -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>SpectraSphere</title>
+    <!-- include head.html on every page that is rendered -->
     {% include 'includes/head.html' %}
 </head>
 <body>
+<!-- include nav.html on every page that is rendered -->
 {% include 'includes/nav.html' %}
+<!-- define content block for templating -->
 {% block content %} {% endblock %}
 </body>
 </html>
