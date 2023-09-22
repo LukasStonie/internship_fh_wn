@@ -13,12 +13,12 @@ jobs:
           pip install sphinx sphinx_rtd_theme
       - name: Sphinx build
         run: |
-          sphinx-build reference_db/doc reference_db/doc_build
+          sphinx-build reference_db/docs reference_db/docs_build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: reference_db/doc_build/
+          publish_dir: reference_db/docs_build/
           force_orphan: true
