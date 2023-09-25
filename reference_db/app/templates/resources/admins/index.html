@@ -1,87 +1,97 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-3 content">
+    <div class="container mt-3 content">
 
-    {% include 'includes/backToStart.html' %}
-    {% include 'includes/errors.html' %}
-    <div class="row">
-        <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-            <h1>Dashboard <b><em>Admin</em></b></h1>
+        {% include 'includes/backToStart.html' %}
+        {% include 'includes/errors.html' %}
+        <div class="row">
+            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                <h1>Dashboard <b><em>Admin</em></b></h1>
+            </div>
+            <div class="col-12 col-md-6 d-flex align-items-center justify-content-end">
+                <a type="button" class="btn btn-outline-success btn-sm"
+                   href="{{ url_for('admin.new') }}"><i class="bi bi-plus-lg"></i> Admin erstellen</a>
+            </div>
         </div>
-    </div>
+        <h4>Zu aktivierende Benutzer</h4>
+        {% if users|rejectattr("active")|list|length<=0 %}
+            <p>Es sind keine inaktiven Benutzer vorhanden</p>
+        {% else %}
 
-    {% if users|length<=0 %}
-    <h4>Es sind noch keine Benutzer vorhanden</h4>
-    {% else %}
-    <h4>Zu aktivierende Benutzer</h4>
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Vorname</th>
-            <th>Nachname</th>
-            <th>E-Mail</th>
-            <th>Status</th>
-            <th>Aktionen</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for user in users|rejectattr("active") %}
-        <tr>
-            <td>{{ user.first_name }}</td>
-            <td>{{ user.last_name }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ 'Aktiv' if user.active else 'Inaktiv' }}</td>
-            <td>
-                <a type="button" class="btn btn-outline-primary btn-sm"
-                   href="{{ url_for('admin.activate', user_id=user.id) }}"><i class="bi bi-check-square-fill"></i>
-                    Aktivieren</a>
-                <a type="button" class="btn btn-outline-danger btn-sm"
-                   href="{{ url_for('admin.delete', user_id=user.id) }}"><i class="bi bi-trash-fill"></i>
-                    Löschen</a>
-            </td>
-        </tr>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Vorname</th>
+                    <th>Nachname</th>
+                    <th>E-Mail</th>
+                    <th>Status</th>
+                    <th>Aktionen</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users|rejectattr("active") %}
+                    <tr>
+                        <td>{{ user.first_name }}</td>
+                        <td>{{ user.last_name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ 'Aktiv' if user.active else 'Inaktiv' }}</td>
+                        <td>
+                            <a type="button" class="btn btn-outline-primary btn-sm"
+                               href="{{ url_for('admin.activate', user_id=user.id) }}"><i
+                                    class="bi bi-check-square-fill"></i>
+                                Aktivieren</a>
+                            <a type="button" class="btn btn-outline-danger btn-sm"
+                               href="{{ url_for('admin.delete', user_id=user.id) }}"><i class="bi bi-trash-fill"></i>
+                                Löschen</a>
+                        </td>
+                    </tr>
 
-        {% endfor %}
-    </table>
-    <h4>Bereits aktive Benutzer</h4>
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Vorname</th>
-            <th>Nachname</th>
-            <th>E-Mail</th>
-            <th>Benutzer-Gruppe</th>
-            <th>Status</th>
-            <th>Aktionen</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for user in users|selectattr("active") %}
-        <tr>
-            <td>{{ user.first_name }}</td>
-            <td>{{ user.last_name }}</td>
-            <td>{{ user.email }}</td>
-            <td>
-                {% for g in groups%}
-                {% if g.id == user.group_id %}
-                {{ g.name }}
-                {% endif %}
                 {% endfor %}
-            </td>
-            <td>{{ 'Aktiv' if user.active else 'Inaktiv' }}</td>
-            <td>
-                <a type="button" class="btn btn-outline-primary btn-sm"
-                   href="{{ url_for('admin.deactivate', user_id=user.id) }}"><i class="bi bi-x-circle-fill"></i>
-                    Deaktivieren</a>
-                <a type="button" class="btn btn-outline-danger btn-sm"
-                   href="{{ url_for('admin.delete', user_id=user.id) }}"><i class="bi bi-trash-fill"></i>
-                    Löschen</a>
-            </td>
-        </tr>
+            </table>
+        {% endif %}
+        <h4>Bereits aktive Benutzer</h4>
+        {% if users|selectattr("active")|list|length<=0 %}
+            <p>Es sind keine aktiven Benutzer vorhanden</p>
+        {% else %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Vorname</th>
+                    <th>Nachname</th>
+                    <th>E-Mail</th>
+                    <th>Benutzer-Gruppe</th>
+                    <th>Status</th>
+                    <th>Aktionen</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users|selectattr("active") %}
+                    <tr>
+                        <td>{{ user.first_name }}</td>
+                        <td>{{ user.last_name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            {% for g in groups %}
+                                {% if g.id == user.group_id %}
+                                    {{ g.name }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{{ 'Aktiv' if user.active else 'Inaktiv' }}</td>
+                        <td>
+                            <a type="button" class="btn btn-outline-primary btn-sm"
+                               href="{{ url_for('admin.deactivate', user_id=user.id) }}"><i
+                                    class="bi bi-x-circle-fill"></i>
+                                Deaktivieren</a>
+                            <a type="button" class="btn btn-outline-danger btn-sm"
+                               href="{{ url_for('admin.delete', user_id=user.id) }}"><i class="bi bi-trash-fill"></i>
+                                Löschen</a>
+                        </td>
+                    </tr>
 
-        {% endfor %}
-    </table>
-    {% endif %}
-</div>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
 {% endblock %}

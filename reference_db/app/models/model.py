@@ -524,6 +524,6 @@ class Compound(Base):
         return f'<Compound "{self.name}">'
 
 
-"""with app.create_app().app_context():
-    Base.metadata.drop_all(app.db.engine)
-    Base.metadata.create_all(app.db.engine)"""
+with app.create_app().app_context():
+    # Base.metadata.drop_all(app.db.engine)
+    Base.metadata.create_all(app.db.engine)
