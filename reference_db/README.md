@@ -51,8 +51,9 @@ simply copying the database file.
 In addition to that, the directory **appdata** needs to be
 copied as well, because it contains the spectra.
 
-When moving the application to a new location, the database file and the appdata directory 
-both need to in the directory specified in the **config.py** file. By default this is the root directory.
+Importing works by just placing the db file and the appdata directory in the correct location.
+This location is specified by the params DATABASE and APPDATA in the _config.py_ file. 
+By default, this is the root directory.
 
 
 ## Interaction
